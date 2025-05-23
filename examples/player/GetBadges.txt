@@ -4,44 +4,61 @@ stdClass Object
         (
             [0] => stdClass Object
                 (
-                    [badgeid] => 16
-                    [level] => 1
-                    [completion_time] => 1404061200
-                    [xp] => 150
-                    [scarcity] => 877623
+                    [badgeid] => 13
+                    [level] => 386
+                    [completion_time] => 1746298735
+                    [xp] => 636
+                    [scarcity] => 2163043
                 )
 
             [1] => stdClass Object
                 (
-                    [badgeid] => 2
-                    [level] => 2
-                    [completion_time] => 1394212133
-                    [xp] => 200
-                    [scarcity] => 1990152
+                    [badgeid] => 68
+                    [level] => 1
+                    [completion_time] => 1734769627
+                    [xp] => 50
+                    [scarcity] => 28088083
                 )
 
             [2] => stdClass Object
                 (
-                    [badgeid] => 13
-                    [level] => 124
-                    [completion_time] => 1268659900
-                    [xp] => 353
-                    [scarcity] => 1243165
+                    [badgeid] => 67
+                    [level] => 4
+                    [completion_time] => 1732908444
+                    [xp] => 100
+                    [scarcity] => 1792481
                 )
 
             [3] => stdClass Object
                 (
-                    [badgeid] => 1
-                    [level] => 4
-                    [completion_time] => 1268659900
-                    [xp] => 200
-                    [scarcity] => 46831294
+                    [badgeid] => 66
+                    [level] => 1
+                    [completion_time] => 1703140038
+                    [xp] => 50
+                    [scarcity] => 38698306
                 )
 
+            [4] => stdClass Object
+                (
+                    [badgeid] => 65
+                    [level] => 3
+                    [completion_time] => 1701116935
+                    [xp] => 75
+                    [scarcity] => 2834438
+                )
+
+            [5] => stdClass Object
+                (
+                    [badgeid] => 49
+                    [level] => 5
+                    [completion_time] => 1673739739
+                    [xp] => 50
+                    [scarcity] => 5242061
+                )
         )
 
-    [player_xp] => 903
-    [player_level] => 9
-    [player_xp_needed_to_level_up] => 97
-    [player_xp_needed_current_level] => 900
+    [player_xp] => 63986
+    [player_level] => 108
+    [player_xp_needed_to_level_up] => 914
+    [player_xp_needed_current_level] => 63800
 )

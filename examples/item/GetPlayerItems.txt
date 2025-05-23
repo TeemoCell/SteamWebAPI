@@ -1,20 +1,20 @@
-Array
+Syntax\SteamApi\Inventory Object
 (
-    [numberOfBackpackSlots] => 50
+    [numberOfBackpackSlots] => 300
     [items] => Illuminate\Support\Collection Object
         (
             [items:protected] => Array
                 (
                     [0] => Syntax\SteamApi\Containers\Item Object
                         (
-                            [id] => 5787837042
-                            [originalId] => 5787837042
-                            [defIndex] => 166
-                            [level] => 5
+                            [id] => 12336429
+                            [originalId] => 12336429
+                            [defIndex] => 2
+                            [level] => 1
                             [quality] => 6
                             [quantity] => 1
-                            [inventory] => 0
-                            [origin] => 0
+                            [inventory] => 1
+                            [origin] => 1
                             [flags] => Array
                                 (
                                     [trade] => 
@@ -23,45 +23,7 @@ Array
 
                             [containedItem] => 
                             [style] => 
-                            [attributes] => Array
-                                (
-                                    [0] => stdClass Object
-                                        (
-                                            [defindex] => 143
-                                            [value] => 1406566784
-                                            [float_value] => 1842591301632
-                                        )
-
-                                    [1] => stdClass Object
-                                        (
-                                            [defindex] => 746
-                                            [value] => 1065353216
-                                            [float_value] => 1
-                                        )
-
-                                    [2] => stdClass Object
-                                        (
-                                            [defindex] => 292
-                                            [value] => 1115684864
-                                            [float_value] => 64
-                                        )
-
-                                    [3] => stdClass Object
-                                        (
-                                            [defindex] => 388
-                                            [value] => 1115684864
-                                            [float_value] => 64
-                                        )
-
-                                    [4] => stdClass Object
-                                        (
-                                            [defindex] => 153
-                                            [value] => 1065353216
-                                            [float_value] => 1
-                                        )
-
-                                )
-
+                            [attributes] => 
                             [custom] => Array
                                 (
                                     [name] => 
@@ -72,47 +34,23 @@ Array
 
                     [1] => Syntax\SteamApi\Containers\Item Object
                         (
-                            [id] => 5787837069
-                            [originalId] => 5787837069
-                            [defIndex] => 877
+                            [id] => 14577130
+                            [originalId] => 14577130
+                            [defIndex] => 13
                             [level] => 1
-                            [quality] => 1
+                            [quality] => 6
                             [quantity] => 1
-                            [inventory] => 3221225480
-                            [origin] => 13
+                            [inventory] => 2
+                            [origin] => 1
                             [flags] => Array
                                 (
-                                    [trade] => 1
+                                    [trade] => 
                                     [craft] => 1
                                 )
 
                             [containedItem] => 
                             [style] => 
-                            [attributes] => Array
-                                (
-                                    [0] => stdClass Object
-                                        (
-                                            [defindex] => 746
-                                            [value] => 1065353216
-                                            [float_value] => 1
-                                        )
-
-                                    [1] => stdClass Object
-                                        (
-                                            [defindex] => 292
-                                            [value] => 1115684864
-                                            [float_value] => 64
-                                        )
-
-                                    [2] => stdClass Object
-                                        (
-                                            [defindex] => 388
-                                            [value] => 1115684864
-                                            [float_value] => 64
-                                        )
-
-                                )
-
+                            [attributes] => 
                             [custom] => Array
                                 (
                                     [name] => 
@@ -123,170 +61,23 @@ Array
 
                     [2] => Syntax\SteamApi\Containers\Item Object
                         (
-                            [id] => 5787837070
-                            [originalId] => 5787837070
-                            [defIndex] => 878
-                            [level] => 1
-                            [quality] => 1
-                            [quantity] => 1
-                            [inventory] => 3221225480
-                            [origin] => 13
-                            [flags] => Array
-                                (
-                                    [trade] => 1
-                                    [craft] => 1
-                                )
-
-                            [containedItem] => 
-                            [style] => 0
-                            [attributes] => Array
-                                (
-                                    [0] => stdClass Object
-                                        (
-                                            [defindex] => 746
-                                            [value] => 1065353216
-                                            [float_value] => 1
-                                        )
-
-                                    [1] => stdClass Object
-                                        (
-                                            [defindex] => 292
-                                            [value] => 1115684864
-                                            [float_value] => 64
-                                        )
-
-                                    [2] => stdClass Object
-                                        (
-                                            [defindex] => 388
-                                            [value] => 1115684864
-                                            [float_value] => 64
-                                        )
-
-                                )
-
-                            [custom] => Array
-                                (
-                                    [name] => 
-                                    [description] => 
-                                )
-
-                        )
-
-                    [3] => Syntax\SteamApi\Containers\Item Object
-                        (
-                            [id] => 5787837071
-                            [originalId] => 5787837071
-                            [defIndex] => 879
-                            [level] => 1
-                            [quality] => 1
-                            [quantity] => 1
-                            [inventory] => 3221225480
-                            [origin] => 13
-                            [flags] => Array
-                                (
-                                    [trade] => 1
-                                    [craft] => 1
-                                )
-
-                            [containedItem] => 
-                            [style] => 0
-                            [attributes] => Array
-                                (
-                                    [0] => stdClass Object
-                                        (
-                                            [defindex] => 746
-                                            [value] => 1065353216
-                                            [float_value] => 1
-                                        )
-
-                                    [1] => stdClass Object
-                                        (
-                                            [defindex] => 292
-                                            [value] => 1115684864
-                                            [float_value] => 64
-                                        )
-
-                                    [2] => stdClass Object
-                                        (
-                                            [defindex] => 388
-                                            [value] => 1115684864
-                                            [float_value] => 64
-                                        )
-
-                                )
-
-                            [custom] => Array
-                                (
-                                    [name] => 
-                                    [description] => 
-                                )
-
-                        )
-
-                    [4] => Syntax\SteamApi\Containers\Item Object
-                        (
-                            [id] => 5787837154
-                            [originalId] => 5787837154
-                            [defIndex] => 5867
+                            [id] => 20050058
+                            [originalId] => 20050058
+                            [defIndex] => 44
                             [level] => 1
                             [quality] => 6
                             [quantity] => 1
-                            [inventory] => 3221225473
-                            [origin] => 0
+                            [inventory] => 3221225480
+                            [origin] => 13
                             [flags] => Array
                                 (
-                                    [trade] => 1
+                                    [trade] => 
                                     [craft] => 1
                                 )
 
                             [containedItem] => 
-                            [style] => 0
-                            [attributes] => Array
-                                (
-                                    [0] => stdClass Object
-                                        (
-                                            [defindex] => 2046
-                                            [value] => 1065353216
-                                            [float_value] => 1
-                                        )
-
-                                    [1] => stdClass Object
-                                        (
-                                            [defindex] => 187
-                                            [value] => 1121189888
-                                            [float_value] => 106
-                                        )
-
-                                    [2] => stdClass Object
-                                        (
-                                            [defindex] => 744
-                                            [value] => 1
-                                            [float_value] => 1.4012984643248E-45
-                                        )
-
-                                    [3] => stdClass Object
-                                        (
-                                            [defindex] => 528
-                                            [value] => 1169641472
-                                            [float_value] => 5866
-                                        )
-
-                                    [4] => stdClass Object
-                                        (
-                                            [defindex] => 731
-                                            [value] => 1065353216
-                                            [float_value] => 1
-                                        )
-
-                                    [5] => stdClass Object
-                                        (
-                                            [defindex] => 815
-                                            [value] => 1
-                                            [float_value] => 1.4012984643248E-45
-                                        )
-
-                                )
-
+                            [style] => 
+                            [attributes] => 
                             [custom] => Array
                                 (
                                     [name] => 
@@ -297,7 +88,7 @@ Array
 
                 )
 
+            [escapeWhenCastingToString:protected] => 
         )
 
 )
-

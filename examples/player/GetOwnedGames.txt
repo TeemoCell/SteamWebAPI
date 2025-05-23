@@ -1,63 +1,77 @@
-Syntax\SteamApi\Collection Object
+Illuminate\Support\Collection Object
 (
     [items:protected] => Array
         (
-            [104] => Syntax\SteamApi\Containers\Game Object
+            [182] => Syntax\SteamApi\Containers\Game Object
                 (
-                    [appId] => 251570
-                    [name] => 7 Days to Die
+                    [appId] => 439550
+                    [name] => 'n Verlore Verstand
                     [playtimeTwoWeeks] => 0
-                    [playtimeTwoWeeksReadable] => 0 minutes
-                    [playtimeForever] => 12
-                    [playtimeForeverReadable] => 12 minutes
-                    [icon] => http://media.steampowered.com/steamcommunity/public/images/apps/251570/c8f826b116770525b68e7b4e37ad83ca044ae760.jpg
-                    [logo] => http://media.steampowered.com/steamcommunity/public/images/apps/251570/d2f0fb2b63983bf5c5a1b627b59ce754788308df.jpg
-                    [header] => http://cdn.steampowered.com/v/gfx/apps/251570/header.jpg
-                    [hasCommunityVisibleStats] => 1
-                )
-
-            [32] => Syntax\SteamApi\Containers\Game Object
-                (
-                    [appId] => 22650
-                    [name] => Alien Breed 2: Assault
-                    [playtimeTwoWeeks] => 0
-                    [playtimeTwoWeeksReadable] => 0 minutes
+                    [playtimeTwoWeeksReadable] => 0 minutes 
                     [playtimeForever] => 0
-                    [playtimeForeverReadable] => 0 minutes
-                    [icon] => http://media.steampowered.com/steamcommunity/public/images/apps/22650/a10e00aa5fc77cc14deb38f7da48e5da40b18503.jpg
-                    [logo] => http://media.steampowered.com/steamcommunity/public/images/apps/22650/57b8df3a30a02c1a013fa6301563dcc2e941ef11.jpg
-                    [header] => http://cdn.steampowered.com/v/gfx/apps/22650/header.jpg
+                    [playtimeForeverReadable] => 0 minutes 
+                    [icon] => http://media.steampowered.com/steamcommunity/public/images/apps/439550/7ed7594638cbce4b9bcd4099f5c5caf1da7991a6.jpg
+                    [logo] => 
+                    [header] => http://cdn.akamai.steamstatic.com/steam/apps/439550/header.jpg
                     [hasCommunityVisibleStats] => 1
                 )
 
-            [33] => Syntax\SteamApi\Containers\Game Object
+            [306] => Syntax\SteamApi\Containers\Game Object
                 (
-                    [appId] => 22670
-                    [name] => Alien Breed 3: Descent
+                    [appId] => 821720
+                    [name] => 20.000 Leagues Under The Sea - Captain Nemo
                     [playtimeTwoWeeks] => 0
-                    [playtimeTwoWeeksReadable] => 0 minutes
+                    [playtimeTwoWeeksReadable] => 0 minutes 
                     [playtimeForever] => 0
-                    [playtimeForeverReadable] => 0 minutes
-                    [icon] => http://media.steampowered.com/steamcommunity/public/images/apps/22670/276d9c54a181c2baf809c53c6172a5475866e693.jpg
-                    [logo] => http://media.steampowered.com/steamcommunity/public/images/apps/22670/6bd254a867864ef8b4e6d2b979547e9c67d669a3.jpg
-                    [header] => http://cdn.steampowered.com/v/gfx/apps/22670/header.jpg
-                    [hasCommunityVisibleStats] => 1
+                    [playtimeForeverReadable] => 0 minutes 
+                    [icon] => http://media.steampowered.com/steamcommunity/public/images/apps/821720/3f2a2e1214c928b0b88912a373338590669c74b9.jpg
+                    [logo] => 
+                    [header] => http://cdn.akamai.steamstatic.com/steam/apps/821720/header.jpg
+                    [hasCommunityVisibleStats] => 0
                 )
 
-            [31] => Syntax\SteamApi\Containers\Game Object
+            [88] => Syntax\SteamApi\Containers\Game Object
                 (
-                    [appId] => 22610
-                    [name] => Alien Breed: Impact
+                    [appId] => 264280
+                    [name] => 99 Levels To Hell
                     [playtimeTwoWeeks] => 0
-                    [playtimeTwoWeeksReadable] => 0 minutes
-                    [playtimeForever] => 0
-                    [playtimeForeverReadable] => 0 minutes
-                    [icon] => http://media.steampowered.com/steamcommunity/public/images/apps/22610/963d4d2b346f7258940a9bb9c8a5e319ec1bc781.jpg
-                    [logo] => http://media.steampowered.com/steamcommunity/public/images/apps/22610/fcf02acbd58c5a7ee29f15df2e849054d1f3a021.jpg
-                    [header] => http://cdn.steampowered.com/v/gfx/apps/22610/header.jpg
+                    [playtimeTwoWeeksReadable] => 0 minutes 
+                    [playtimeForever] => 721
+                    [playtimeForeverReadable] => 12 hours 1 minute 
+                    [icon] => http://media.steampowered.com/steamcommunity/public/images/apps/264280/d32dd940d00289ec7dcc927b3511be7f8f8f79d6.jpg
+                    [logo] => 
+                    [header] => http://cdn.akamai.steamstatic.com/steam/apps/264280/header.jpg
                     [hasCommunityVisibleStats] => 1
                 )
 
+            [313] => Syntax\SteamApi\Containers\Game Object
+                (
+                    [appId] => 856990
+                    [name] => A Long Way Down
+                    [playtimeTwoWeeks] => 0
+                    [playtimeTwoWeeksReadable] => 0 minutes 
+                    [playtimeForever] => 0
+                    [playtimeForeverReadable] => 0 minutes 
+                    [icon] => http://media.steampowered.com/steamcommunity/public/images/apps/856990/39ce73f0d19604db34fc048cd1dfe5441efab902.jpg
+                    [logo] => 
+                    [header] => http://cdn.akamai.steamstatic.com/steam/apps/856990/header.jpg
+                    [hasCommunityVisibleStats] => 1
+                )
+
+            [85] => Syntax\SteamApi\Containers\Game Object
+                (
+                    [appId] => 261430
+                    [name] => AION Free-to-Play
+                    [playtimeTwoWeeks] => 0
+                    [playtimeTwoWeeksReadable] => 0 minutes 
+                    [playtimeForever] => 0
+                    [playtimeForeverReadable] => 0 minutes 
+                    [icon] => http://media.steampowered.com/steamcommunity/public/images/apps/261430/55aee1e214ba42b3ce439e578cb1149e6a819ebd.jpg
+                    [logo] => 
+                    [header] => http://cdn.akamai.steamstatic.com/steam/apps/261430/header.jpg
+                    [hasCommunityVisibleStats] => 0
+                )
         )
 
+    [escapeWhenCastingToString:protected] => 
 )
