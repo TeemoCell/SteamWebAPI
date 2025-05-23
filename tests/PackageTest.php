@@ -1,12 +1,11 @@
 <?php
 
-require_once('BaseTester.php');
+require_once 'BaseTester.php';
 
 /** @group Package */
 class PackageTest extends BaseTester
 {
-    /** @test */
-    public function it_gets_details_for_an_package_by_id()
+    public function test_it_gets_details_for_an_package_by_id()
     {
         $details = $this->steamClient->package()->packageDetails($this->packageId);
 

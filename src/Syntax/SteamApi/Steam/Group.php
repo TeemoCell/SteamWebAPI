@@ -12,13 +12,9 @@ class Group extends Client
         // Set up the api details
         $this->method = 'memberslistxml';
 
-        if (is_numeric($group)) {
-            $this->url = 'http://steamcommunity.com/gid/';
-        } else {
-            $this->url = 'http://steamcommunity.com/groups/';
-        }
+        $this->url = (is_numeric($group)) ? 'http://steamcommunity.com/gid/' : 'http://steamcommunity.com/groups/';
 
-        $this->url = $this->url . $group;
+        $this->url .= $group;
 
         // Set up the arguments
         $arguments = [

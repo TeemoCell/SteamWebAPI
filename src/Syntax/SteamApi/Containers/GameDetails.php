@@ -9,7 +9,7 @@ class GameDetails extends BaseContainer
     public mixed $serverIp;
 
     public mixed $serverSteamId;
-    
+
     public mixed $lobbyId;
 
     public mixed $extraInfo;

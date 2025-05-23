@@ -60,11 +60,7 @@ class Stats extends Client
         $this->interface = null;
         $this->method    = 'achievements';
 
-        if (is_numeric($this->steamId)) {
-            $this->url = 'http://steamcommunity.com/profiles/';
-        } else {
-            $this->url = 'http://steamcommunity.com/id/';
-        }
+        $this->url = (is_numeric($this->steamId)) ? 'http://steamcommunity.com/profiles/' : 'http://steamcommunity.com/id/';
 
         $this->url = $this->url . $this->steamId . '/stats/' . $appId;
 

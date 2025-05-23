@@ -1,14 +1,13 @@
 <?php
 
-require_once('BaseTester.php');
+require_once 'BaseTester.php';
 
 /** @group News */
 class NewsTest extends BaseTester {
 
-    /** @test */
-    public function it_gets_news_by_app_id()
+    public function test_it_gets_news_by_app_id()
     {
-        $newsArticle = $this->steamClient->news()->GetNewsForApp($this->appId, 1, 20);
+        $newsArticle = $this->steamClient->news()->GetNewsForApp($this->appId, 1, 20 );
 
         $this->assertObjectHasProperty('appid', $newsArticle);
         $this->assertEquals($this->appId, $newsArticle->appid);
@@ -23,8 +22,7 @@ class NewsTest extends BaseTester {
         $this->assertTrue(strlen(strip_tags((string) $newsArticle->newsitems[0]->contents)) <= 23);
     }
 
-    /** @test */
-    public function it_gets_more_than_1_news_article_by_app_id()
+    public function test_it_gets_more_than_1_news_article_by_app_id()
     {
         $newsArticle = $this->steamClient->news()->GetNewsForApp($this->appId);
 
@@ -34,9 +32,9 @@ class NewsTest extends BaseTester {
     }
 
     /**
-     * @test
+     *@test
      *
-     * @depends it_gets_more_than_1_news_article_by_app_id
+     * @depends test_it_gets_more_than_1_news_article_by_app_id
      *
      * @param $defaultNewsCall
      */
@@ -48,5 +46,4 @@ class NewsTest extends BaseTester {
             }
         }
     }
-
 }

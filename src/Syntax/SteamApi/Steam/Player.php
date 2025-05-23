@@ -37,7 +37,7 @@ class Player extends Client
         // Get the client
         $client = $this->getServiceResponse($arguments);
 
-        return $client->player_level;
+        return $client->player_level ?? null;
     }
 
     /**
@@ -49,7 +49,7 @@ class Player extends Client
     public function GetPlayerLevelDetails(): ?Level
     {
         $details = $this->GetBadges();
-        
+
         if(count((array)$details) == 0){
             return null;
         }

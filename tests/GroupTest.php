@@ -1,12 +1,11 @@
 <?php
 
-require_once('BaseTester.php');
+require_once 'BaseTester.php';
 
 /** @group Group */
 class GroupTest extends BaseTester {
 
-    /** @test */
-    public function it_gets_a_summary_of_a_group_by_id()
+    public function test_it_gets_a_summary_of_a_group_by_id()
     {
         $group = $this->steamClient->group()->GetGroupSummary($this->groupId);
 
@@ -14,8 +13,7 @@ class GroupTest extends BaseTester {
         $this->checkClasses($group);
     }
 
-    /** @test */
-    public function it_gets_a_summary_of_a_group_by_name()
+    public function test_it_gets_a_summary_of_a_group_by_name()
     {
         $group = $this->steamClient->group()->GetGroupSummary($this->groupName);
 
@@ -33,5 +31,4 @@ class GroupTest extends BaseTester {
         $this->assertInstanceOf(\Syntax\SteamApi\Containers\Group\MemberDetails::class, $group->memberDetails);
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $group->members);
     }
-
 }

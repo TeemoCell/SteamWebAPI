@@ -6,13 +6,13 @@ use Dotenv\Dotenv;
 
 class BaseTester extends TestCase {
 
-    protected string $id32   = 'STEAM_1:1:31085444';
+    protected string $id32   = 'STEAM_0:1:188144897';
 
-    protected int $id64      = 76561198022436617;
+    protected int $id64      = 76561198336555523;
 
-    protected string $id3    = '[U:1:62170889]';
+    protected string $id3    = '[U:1:376289795]';
 
-    protected int $altId64   = 76561197979958413;
+    protected int $altId64   = 76561198336555523;
 
     protected int $appId     = 620; // Portal 2
 
@@ -41,8 +41,7 @@ class BaseTester extends TestCase {
         $this->steamClient = new Client();
     }
 
-    /** @test */
-    public function empty_test()
+    public function test_empty()
     {
         $this->assertTrue(true);
     }
@@ -243,5 +242,4 @@ class BaseTester extends TestCase {
     {
         $this->expectApiCallFailedException( 'Api call failed to complete due to an empty response');
     }
-
 }

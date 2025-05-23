@@ -4,13 +4,12 @@ use GuzzleHttp\Exception\GuzzleException;
 use Syntax\SteamApi\Exceptions\ApiCallFailedException;
 use Syntax\SteamApi\Exceptions\UnrecognizedId;
 
-require_once('BaseTester.php');
+require_once 'BaseTester.php';
 
 /** @group User */
 class UserTest extends BaseTester {
 
-    /** @test */
-    public function it_accepts_an_array_of_steam_ids()
+    public function test_it_accepts_an_array_of_steam_ids()
     {
         $steamIds = [$this->id32, $this->altId64];
 
@@ -21,50 +20,48 @@ class UserTest extends BaseTester {
     }
 
     /**
-     * @test
      * @throws UnrecognizedId
      * @throws GuzzleException
      * @throws ApiCallFailedException
      */
-    public function it_throws_an_exception_when_no_display_name_is_provided()
+    public function test_it_throws_an_exception_when_no_display_name_is_provided()
     {
         if (method_exists($this, 'setExpectedException')) {
-            $this->setExpectedException(\Syntax\SteamApi\Exceptions\UnrecognizedId::class);
+            $this->setExpectedException(UnrecognizedId::class);
         } else {
-            $this->expectException(\Syntax\SteamApi\Exceptions\UnrecognizedId::class);
+            $this->expectException(UnrecognizedId::class);
         }
-        
+
         $steamObject = $this->steamClient->user($this->id64)->ResolveVanityURL();
 
         $this->assertEquals('No match', $steamObject);
     }
 
-    /** @test
+    /**
      * @throws ApiCallFailedException
      * @throws GuzzleException
      * @throws UnrecognizedId
      */
-    public function it_returns_no_match_from_an_invalid_display_name()
+    public function test_it_returns_no_match_from_an_invalid_display_name()
     {
         $steamObject = $this->steamClient->user($this->id64)->ResolveVanityURL('stygiansabyssINVALID');
 
         $this->assertEquals('No match', $steamObject);
     }
 
-    /** @test
+    /**
      * @throws ApiCallFailedException
      * @throws GuzzleException
      * @throws UnrecognizedId
      */
-    public function it_gets_the_steam_id_from_a_display_name()
+    public function test_it_gets_the_steam_id_from_a_display_name()
     {
         $steamObject = $this->steamClient->user(76561198022436617)->ResolveVanityURL('stygiansabyss');
 
         $this->assertEquals(76561198022436617, $steamObject->id64);
     }
 
-    /** @test */
-    public function it_gets_the_base_users_player_summary()
+    public function test_it_gets_the_base_users_player_summary()
     {
         $friendsList = $this->steamClient->user($this->id64)->GetPlayerSummaries();
 
@@ -73,8 +70,7 @@ class UserTest extends BaseTester {
         $this->checkPlayerClasses($friendsList);
     }
 
-    /** @test */
-    public function it_gets_the_supplied_users_player_summary()
+    public function test_it_gets_the_supplied_users_player_summary()
     {
         $friendsList = $this->steamClient->user($this->id64)->GetPlayerSummaries($this->altId64);
 
@@ -85,8 +81,7 @@ class UserTest extends BaseTester {
         $this->assertNotEquals($friendsList[0]->steamId, $this->id64);
     }
 
-    /** @test */
-    public function it_gets_all_users_in_friend_list()
+    public function test_it_gets_all_users_in_friend_list()
     {
         $friendsList = $this->steamClient->user($this->id64)->GetFriendList('all');
 
@@ -96,8 +91,7 @@ class UserTest extends BaseTester {
         $this->checkPlayerClasses($friendsList);
     }
 
-    /** @test */
-    public function it_gets_friend_users_in_friend_list()
+    public function test_it_gets_friend_users_in_friend_list()
     {
         $friendsList = $this->steamClient->user($this->id64)->GetFriendList('friend');
 
@@ -107,11 +101,10 @@ class UserTest extends BaseTester {
         $this->checkPlayerClasses($friendsList);
     }
 
-    /** @test */
-    public function it_throws_exception_to_invalid_relationship_types()
+    public function test_it_throws_exception_to_invalid_relationship_types()
     {
         $expectedMessage = 'Provided relationship [nonFriend] is not valid.  Please select from: all, friend';
-        
+
         if (method_exists($this, 'setExpectedException')) {
             $this->setExpectedException('InvalidArgumentException', $expectedMessage);
         } else {
@@ -122,8 +115,7 @@ class UserTest extends BaseTester {
         $this->steamClient->user($this->id64)->GetFriendList('nonFriend');
     }
 
-    /** @test */
-    public function it_gets_the_bans_for_the_base_user()
+    public function test_it_gets_the_bans_for_the_base_user()
     {
         $bans = $this->steamClient->user($this->id64)->GetPlayerBans();
 
@@ -133,8 +125,7 @@ class UserTest extends BaseTester {
         $this->assertObjectHasProperties($attributes, $bans[0]);
     }
 
-    /** @test */
-    public function it_gets_the_bans_for_the_supplied_user()
+    public function test_it_gets_the_bans_for_the_supplied_user()
     {
         $bans = $this->steamClient->user($this->id64)->GetPlayerBans($this->altId64);
 

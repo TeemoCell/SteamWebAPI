@@ -5,8 +5,7 @@ require_once('BaseTester.php');
 /** @group App */
 class AppTest extends BaseTester {
 
-    /** @test */
-    public function it_gets_details_for_an_app_by_id()
+    public function test_it_gets_details_for_an_app_by_id()
     {
         $details = $this->steamClient->app()->appDetails($this->appId);
 
@@ -18,8 +17,7 @@ class AppTest extends BaseTester {
         $this->checkClasses($detail);
     }
 
-    /** @test */
-    public function it_gets_a_list_of_all_apps()
+    public function test_it_gets_a_list_of_all_apps()
     {
         $apps = $this->steamClient->app()->GetAppList();
 

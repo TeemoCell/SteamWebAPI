@@ -58,7 +58,7 @@ class App extends BaseContainer
     public $achievements;
 
     public $dlc;
-    
+
     public $movies;
 
     public function __construct($app)
@@ -76,7 +76,7 @@ class App extends BaseContainer
         $this->pcRequirements     = $app->pc_requirements;
         $this->legal              = $this->checkIssetField($app, 'legal_notice', 'None');
         $this->developers         = $this->checkIssetCollection($app, 'developers');
-        $this->publishers         = new Collection($app->publishers);
+        $this->publishers         = $this->checkIssetCollection($app, 'publishers');
         $this->price              = $this->checkIssetField($app, 'price_overview', $this->getFakePriceObject());
         $this->platforms          = $app->platforms;
         $this->metacritic         = $this->checkIssetField($app, 'metacritic', $this->getFakeMetacriticObject());

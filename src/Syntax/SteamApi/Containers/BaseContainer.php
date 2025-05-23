@@ -14,7 +14,7 @@ abstract class BaseContainer
      */
     protected function checkIsNullField($app, string $field, mixed $value = null): mixed
     {
-        return ! is_null($app->$field) ? $app->$field : $value;
+        return $app->$field ?? $value;
     }
 
     /**
@@ -46,7 +46,7 @@ abstract class BaseContainer
      */
     protected function getImageForAvatar(string $image): string
     {
-        return '<img src="' . $image . '" />';
+        return "<img src=\"$image\" />";
     }
 
     /**
@@ -61,10 +61,10 @@ abstract class BaseContainer
     protected function pluralize($word, $count): string
     {
         if ((int) $count === 1) {
-            return $word .' ';
+            return "$word ";
         }
 
-        return $word .'s ';
+        return "{$word}s ";
     }
 
     /**
