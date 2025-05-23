@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": "^8.1",
-    "laravel/framework": "^10.0|^11.0",
+    "laravel/framework": "^10.0|^11.0|^12.0",
     "guzzlehttp/guzzle": "^7.8",
     "ext-bcmath": "*",
     "ext-simplexml": "*",
@@ -20,10 +20,10 @@
     "ext-json": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "^10.5|^11.0",
-    "orchestra/testbench": "^8.0",
+    "phpunit/phpunit": "^10.5|^11.0|^12.0",
+    "orchestra/testbench": "^8.0|^10.0",
     "vlucas/phpdotenv": "^5.6",
-    "rector/rector": "^1.0"
+    "rector/rector": "^1.0|^2.0"
   },
   "autoload": {
     "psr-4": {
@@ -41,6 +41,11 @@
   "scripts": {
     "test": "XDEBUG_MODE=off vendor/bin/phpunit -d memory_limit=512M",
     "coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit -d memory_limit=512M --coverage-clover=coverage.clover",
-    "coverage:html": "XDEBUG_MODE=coverage vendor/bin/phpunit -d memory_limit=512M --coverage-html ./coverage"
+    "coverage:html": "XDEBUG_MODE=coverage vendor/bin/phpunit -d memory_limit=512M --coverage-html ./coverage",
+    "Docker - Build:container": "docker-compose build",
+    "Docker - Install:dependencies" : "docker-compose run --rm php composer install",
+    "Docker - Run:tests" : "docker-compose run --rm php composer test",
+    "Docker - Run:coverage": "docker-compose run --rm php composer coverage",
+    "Docker - Run:Bash": "docker-compose run --rm php bash"
   }
 }
