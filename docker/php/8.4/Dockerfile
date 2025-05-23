@@ -1,4 +1,4 @@
-FROM php:8.1-alpine
+FROM php:8.4-alpine
 
 # Install deps
 RUN apk --update add linux-headers bash autoconf build-base wget curl git zip unzip zlib-dev shadow libpq binutils-dev
