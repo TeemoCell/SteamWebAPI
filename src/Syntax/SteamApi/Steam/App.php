@@ -25,8 +25,8 @@ class App extends Client
 
     /**
      * @param $appIds
-     * @param null $country
-     * @param null $language
+     * @param string|null $country
+     * @param string|null $language
      * @return Collection
      * @throws ApiCallFailedException
      * @throws GuzzleException
