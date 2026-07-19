@@ -114,9 +114,16 @@ class Stats extends Client
         ];
 
         // Get the client
-        $client = $this->setUpClient($arguments)->achievementpercentages;
+        $response = $this->setUpClient($arguments);
 
-        return $client->achievements;
+        if (! is_object($response)
+            || ! property_exists($response, 'achievementpercentages')
+            || ! is_object($response->achievementpercentages)
+            || ! property_exists($response->achievementpercentages, 'achievements')) {
+            return [];
+        }
+
+        return $response->achievementpercentages->achievements;
     }
 
     /**
@@ -141,11 +148,23 @@ class Stats extends Client
         ];
 
         // Get the client
-        $client = $this->setUpClient($arguments)->playerstats;
+        $response = $this->setUpClient($arguments);
+
+        if (! is_object($response)
+            || ! property_exists($response, 'playerstats')
+            || ! is_object($response->playerstats)) {
+            return [];
+        }
+
+        $client = $response->playerstats;
 
         // Games like DOTA and CS:GO have additional stats here.  Return everything if they are wanted.
         if ($all === true) {
             return $client;
+        }
+
+        if (! property_exists($client, 'achievements')) {
+            return [];
         }
 
         return $client->achievements;
