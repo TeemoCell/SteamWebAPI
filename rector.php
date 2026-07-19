@@ -9,8 +9,8 @@ use Rector\TypeDeclaration\Rector\Property\AddPropertyTypeDeclarationRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
+        __DIR__.'/src',
+        __DIR__.'/tests',
     ]);
 
     // register a single rule
@@ -18,7 +18,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(AddPropertyTypeDeclarationRector::class);
 
     // define sets of rules
-        $rectorConfig->sets([
-            LevelSetList::UP_TO_PHP_82,
-        ]);
+    $rectorConfig->sets([
+        LevelSetList::UP_TO_PHP_84,
+    ]);
 };

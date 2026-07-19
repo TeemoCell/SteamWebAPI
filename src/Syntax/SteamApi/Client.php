@@ -40,7 +40,7 @@ class Client
 
     protected ClientInterface $client;
 
-    protected ?string $interface;
+    protected ?string $interface = null;
 
     protected string $method;
 
@@ -148,7 +148,7 @@ class Client
         $parameters = http_build_query($parameters);
 
         // Send the request and get the results
-        $request = new Request('GET', $steamUrl.'?'.$parameters);
+        $request = new Request('GET', "$steamUrl?$parameters");
         $response = $this->sendRequest($request);
 
         // Pass the results back
@@ -200,7 +200,7 @@ class Client
 
         // Pass the results back
         libxml_use_internal_errors(true);
-        $result = simplexml_load_file($steamUrl.'?'.$parameters);
+        $result = simplexml_load_file("$steamUrl?$parameters");
 
         if (! $result) {
             return null;

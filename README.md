@@ -23,7 +23,7 @@ This package provides an easy way to get details from the Steam Web API service.
 - `IPlayerService`
 - `ISteamUser`
 - `ISteamUserStats`
-- `ISteamApp`
+- `IStoreService`
 
 <hr/>
 
@@ -389,7 +389,14 @@ This gets all the details for a game. This is most of the information from the s
 
 #### GetAppList
 
-This method will return an array of app objects directly from Steam. It includes the appID and the app name.
+This method returns all matching app objects directly from Steam. It uses the
+paginated `IStoreService` endpoint and follows every result page automatically.
+Optional filters supported by Steam, such as `include_dlc`, `if_modified_since`,
+or `max_results`, can be passed as an array.
+
+```php
+$apps = $steam->app()->GetAppList(['include_dlc' => true]);
+```
 
 > Example Output: [GetAppList](./examples/app/GetAppList.txt)
 

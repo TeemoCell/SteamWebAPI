@@ -55,18 +55,50 @@ class App extends Client
      * @throws ApiCallFailedException
      * @throws GuzzleException
      */
-    public function GetAppList()
+    public function GetAppList(array $arguments = []): array
     {
-        // Set up the api details
-        $this->url = 'http://api.steampowered.com/';
-        $this->interface = 'ISteamApps';
+        $this->url = 'https://partner.steam-api.com/';
+        $this->interface = 'IStoreService';
         $this->method = __FUNCTION__;
-        $this->version = 'v0001';
+        $this->version = 'v1';
 
-        // Get the client
-        $client = $this->setUpClient();
+        $arguments['max_results'] = min(
+            max((int) ($arguments['max_results'] ?? 50000), 1),
+            50000,
+        );
 
-        return $client->applist->apps->app;
+        $apps = [];
+        $lastAppId = $arguments['last_appid'] ?? null;
+
+        do {
+            $response = $this->getServiceResponse($arguments);
+            $page = isset($response->apps) && is_array($response->apps)
+                ? $response->apps
+                : [];
+
+            if ($page === []) {
+                break;
+            }
+
+            array_push($apps, ...$page);
+
+            $lastApp = end($page);
+            $nextAppId = is_object($lastApp) && isset($lastApp->appid)
+                ? $lastApp->appid
+                : null;
+            $hasMoreResults = isset($response->have_more_results)
+                ? (bool) $response->have_more_results
+                : count($page) >= $arguments['max_results'];
+
+            if (! $hasMoreResults || $nextAppId === null || $nextAppId === $lastAppId) {
+                break;
+            }
+
+            $lastAppId = $nextAppId;
+            $arguments['last_appid'] = $lastAppId;
+        } while (true);
+
+        return $apps;
     }
 
     protected function convertToObjects($apps): Collection
