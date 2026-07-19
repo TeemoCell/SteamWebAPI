@@ -9,6 +9,7 @@ class AppTest extends BaseTester {
     {
         $details = $this->steamClient->app()->appDetails($this->appId);
 
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $details);
         $this->assertCount(1, $details);
 
         $detail = $details->first();
