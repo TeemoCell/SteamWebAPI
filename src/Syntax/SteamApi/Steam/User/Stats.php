@@ -3,6 +3,7 @@
 namespace Syntax\SteamApi\Steam\User;
 
 use Exception;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Syntax\SteamApi\Client;
 use Syntax\SteamApi\Containers\Achievement;
@@ -10,11 +11,11 @@ use Syntax\SteamApi\Exceptions\ApiCallFailedException;
 
 class Stats extends Client
 {
-    public function __construct($steamId)
+    public function __construct($steamId, ?string $apiKey = null, ?ClientInterface $client = null)
     {
-        parent::__construct();
+        parent::__construct($apiKey, $client);
         $this->interface = 'ISteamUserStats';
-        $this->steamId   = $steamId;
+        $this->steamId = $steamId;
     }
 
     /**
@@ -29,14 +30,14 @@ class Stats extends Client
     public function GetPlayerAchievementsAPI($appId): ?array
     {
         // Set up the api details
-        $this->method  = 'GetPlayerAchievementsAPI';
+        $this->method = 'GetPlayerAchievementsAPI';
         $this->version = 'v0001';
 
         // Set up the arguments
         $arguments = [
             'steamid' => $this->steamId,
-            'appid'   => $appId,
-            'l'       => 'english',
+            'appid' => $appId,
+            'l' => 'english',
         ];
 
         // Get the client
@@ -48,7 +49,7 @@ class Stats extends Client
         }
 
         $client = $this->setUpClient($arguments)->playerstats;
-        $stats  = $stats->game->availableGameStats->achievements;
+        $stats = $stats->game->availableGameStats->achievements;
 
         // Clean up the games
         return $this->convertToObjects($client->achievements);
@@ -58,11 +59,11 @@ class Stats extends Client
     {
         // Set up the api details
         $this->interface = null;
-        $this->method    = 'achievements';
+        $this->method = 'achievements';
 
         $this->url = (is_numeric($this->steamId)) ? 'http://steamcommunity.com/profiles/' : 'http://steamcommunity.com/id/';
 
-        $this->url = $this->url . $this->steamId . '/stats/' . $appId;
+        $this->url = $this->url.$this->steamId.'/stats/'.$appId;
 
         // Set up the arguments
         $arguments = [
@@ -104,13 +105,13 @@ class Stats extends Client
     public function GetGlobalAchievementPercentagesForApp($gameId)
     {
         // Set up the api details
-        $this->method  = __FUNCTION__;
+        $this->method = __FUNCTION__;
         $this->version = 'v0002';
 
         // Set up the arguments
         $arguments = [
             'gameid' => $gameId,
-            'l'      => 'english',
+            'l' => 'english',
         ];
 
         // Get the client
@@ -137,14 +138,14 @@ class Stats extends Client
     public function GetUserStatsForGame(int $appId, bool $all = false): mixed
     {
         // Set up the api details
-        $this->method  = __FUNCTION__;
+        $this->method = __FUNCTION__;
         $this->version = 'v0002';
 
         // Set up the arguments
         $arguments = [
             'steamid' => $this->steamId,
-            'appid'   => $appId,
-            'l'       => 'english',
+            'appid' => $appId,
+            'l' => 'english',
         ];
 
         // Get the client
@@ -182,13 +183,13 @@ class Stats extends Client
     public function GetSchemaForGame($appId): mixed
     {
         // Set up the api details
-        $this->method  = __FUNCTION__;
+        $this->method = __FUNCTION__;
         $this->version = 'v0002';
 
         // Set up the arguments
         $arguments = [
             'appid' => $appId,
-            'l'     => 'english',
+            'l' => 'english',
         ];
 
         // Get the client

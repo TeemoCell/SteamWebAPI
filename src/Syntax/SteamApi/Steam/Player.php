@@ -2,6 +2,7 @@
 
 namespace Syntax\SteamApi\Steam;
 
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Syntax\SteamApi\Client;
 use Illuminate\Support\Collection;
@@ -12,12 +13,12 @@ use Syntax\SteamApi\Exceptions\ApiCallFailedException;
 
 class Player extends Client
 {
-    public function __construct($steamId)
+    public function __construct($steamId, ?string $apiKey = null, ?ClientInterface $client = null)
     {
-        parent::__construct();
+        parent::__construct($apiKey, $client);
         $this->interface = 'IPlayerService';
         $this->isService = true;
-        $this->steamId   = $steamId;
+        $this->steamId = $steamId;
     }
 
     /**
@@ -50,7 +51,7 @@ class Player extends Client
     {
         $details = $this->GetBadges();
 
-        if(count((array)$details) == 0){
+        if (count((array) $details) == 0) {
             return null;
         }
 
@@ -171,7 +172,7 @@ class Player extends Client
 
         // Set up the arguments
         $arguments = [
-            'steamId'       => $this->steamId,
+            'steamId' => $this->steamId,
             'appid_playing' => $appIdPlaying,
         ];
 

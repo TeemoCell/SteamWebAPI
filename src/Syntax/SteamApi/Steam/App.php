@@ -2,6 +2,7 @@
 
 namespace Syntax\SteamApi\Steam;
 
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Syntax\SteamApi\Client;
 use Illuminate\Support\Collection;
@@ -15,11 +16,11 @@ class App extends Client
      * @throws InvalidApiKeyException
      */
 
-    public function __construct()
+    public function __construct(?string $apiKey = null, ?ClientInterface $client = null)
     {
-        parent::__construct();
+        parent::__construct($apiKey, $client);
 
-        $this->url       = 'http://store.steampowered.com/';
+        $this->url = 'http://store.steampowered.com/';
         $this->interface = 'api';
     }
 
@@ -34,7 +35,7 @@ class App extends Client
     public function appDetails($appIds, $country = null, $language = null): Collection
     {
         // Set up the api details
-        $this->method  = 'appdetails';
+        $this->method = 'appdetails';
         $this->version = null;
 
         // Set up the arguments
@@ -57,10 +58,10 @@ class App extends Client
     public function GetAppList()
     {
         // Set up the api details
-        $this->url       = 'http://api.steampowered.com/';
+        $this->url = 'http://api.steampowered.com/';
         $this->interface = 'ISteamApps';
-        $this->method    = __FUNCTION__;
-        $this->version   = 'v0001';
+        $this->method = __FUNCTION__;
+        $this->version = 'v0001';
 
         // Get the client
         $client = $this->setUpClient();

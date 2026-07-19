@@ -2,6 +2,7 @@
 
 namespace Syntax\SteamApi\Steam;
 
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Syntax\SteamApi\Client;
 use Illuminate\Support\Collection;
@@ -10,9 +11,9 @@ use Syntax\SteamApi\Exceptions\ApiCallFailedException;
 
 class Package extends Client
 {
-    public function __construct()
+    public function __construct(?string $apiKey = null, ?ClientInterface $client = null)
     {
-        parent::__construct();
+        parent::__construct($apiKey, $client);
 
         $this->url = 'http://store.steampowered.com/';
         $this->interface = 'api';
@@ -30,8 +31,8 @@ class Package extends Client
         // Set up the arguments
         $arguments = [
             'packageids' => $packId,
-            'cc'         => $cc,
-            'l'          => $language,
+            'cc' => $cc,
+            'l' => $language,
         ];
         // Get the client
         $client = $this->setUpClient($arguments);

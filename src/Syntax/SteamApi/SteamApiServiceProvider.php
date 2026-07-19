@@ -13,7 +13,7 @@ class SteamApiServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->publishes([__DIR__ . '/../../config/config.php' => config_path('steam-api.php')]);
+        $this->publishes([__DIR__.'/../../config/config.php' => config_path('steam-api.php')]);
     }
 
     /**
@@ -23,7 +23,15 @@ class SteamApiServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('steam-api', fn () => new Client());
+        $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'steam-api');
+
+        $this->app->singleton(Client::class, function ($app): Client {
+            $apiKey = $app['config']->get('steam-api.steamApiKey');
+
+            return new Client(is_string($apiKey) ? $apiKey : null);
+        });
+
+        $this->app->alias(Client::class, 'steam-api');
     }
 
     /**
@@ -33,6 +41,6 @@ class SteamApiServiceProvider extends ServiceProvider
      */
     public function provides(): array
     {
-        return ['steam-api'];
+        return [Client::class, 'steam-api'];
     }
 }

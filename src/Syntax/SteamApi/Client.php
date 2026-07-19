@@ -3,6 +3,7 @@
 namespace Syntax\SteamApi;
 
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use stdClass;
@@ -20,20 +21,14 @@ use Syntax\SteamApi\Steam\App;
 use Syntax\SteamApi\Steam\Group;
 use Syntax\SteamApi\Steam\Item;
 use Syntax\SteamApi\Steam\News;
-use Syntax\Steamapi\Steam\Package;
+use Syntax\SteamApi\Steam\Package;
 use Syntax\SteamApi\Steam\Player;
 use Syntax\SteamApi\Steam\User;
 use Syntax\SteamApi\Steam\User\Stats;
 
 /**
- * @method News       news()
- * @method Player     player($steamId)
- * @method User       user($steamId)
- * @method Stats      userStats($steamId)
- * @method App        app()
- * @method Package    package()
- * @method Group      group()
- * @method Item       item()
+ * The explicit endpoint methods are the preferred API. The magic fallback in
+ * __call() remains only for backwards compatibility with custom endpoints.
  */
 class Client
 {
@@ -43,7 +38,7 @@ class Client
 
     protected string $url = 'http://api.steampowered.com/';
 
-    protected GuzzleClient $client;
+    protected ClientInterface $client;
 
     protected ?string $interface;
 
@@ -62,12 +57,14 @@ class Client
     /**
      * @throws InvalidApiKeyException
      */
-    public function __construct()
+    public function __construct(?string $apiKey = null, ?ClientInterface $client = null)
     {
-        $apiKey = $this->getApiKey();
+        $this->client = $client ?? new GuzzleClient();
+        $this->apiKey = $apiKey ?? $this->getApiKey();
 
-        $this->client = new GuzzleClient();
-        $this->apiKey = $apiKey;
+        if ($this->apiKey === '' || $this->apiKey === 'YOUR-API-KEY') {
+            throw new InvalidApiKeyException();
+        }
 
         // Set up the Ids
         $this->setUpFormatted();
@@ -81,6 +78,46 @@ class Client
     public function getSteamId()
     {
         return $this->steamId;
+    }
+
+    public function news(): News
+    {
+        return new News($this->apiKey, $this->client);
+    }
+
+    public function player(int|string $steamId): Player
+    {
+        return new Player($this->normalizeSteamId($steamId), $this->apiKey, $this->client);
+    }
+
+    public function user(int|string|array $steamId): User
+    {
+        return new User($this->normalizeSteamId($steamId), $this->apiKey, $this->client);
+    }
+
+    public function userStats(int|string $steamId): Stats
+    {
+        return new Stats($this->normalizeSteamId($steamId), $this->apiKey, $this->client);
+    }
+
+    public function app(): App
+    {
+        return new App($this->apiKey, $this->client);
+    }
+
+    public function package(): Package
+    {
+        return new Package($this->apiKey, $this->client);
+    }
+
+    public function group(): Group
+    {
+        return new Group($this->apiKey, $this->client);
+    }
+
+    public function item(): Item
+    {
+        return new Item($this->apiKey, $this->client);
     }
 
     /**
@@ -100,8 +137,8 @@ class Client
         }
 
         $parameters = [
-            'key'        => $this->apiKey,
-            'format'     => $this->apiFormat,
+            'key' => $this->apiKey,
+            'format' => $this->apiFormat,
             'input_json' => $arguments,
         ];
 
@@ -111,7 +148,7 @@ class Client
         $parameters = http_build_query($parameters);
 
         // Send the request and get the results
-        $request  = new Request('GET', $steamUrl . '?' . $parameters);
+        $request = new Request('GET', $steamUrl.'?'.$parameters);
         $response = $this->sendRequest($request);
 
         // Pass the results back
@@ -125,10 +162,10 @@ class Client
     protected function setUpClient(array $arguments = [])
     {
         $versionFlag = ! is_null($this->version);
-        $steamUrl    = $this->buildUrl($versionFlag);
+        $steamUrl = $this->buildUrl($versionFlag);
 
         $parameters = [
-            'key'    => $this->apiKey,
+            'key' => $this->apiKey,
             'format' => $this->apiFormat,
         ];
 
@@ -147,7 +184,7 @@ class Client
         }
 
         // Send the request and get the results
-        $request  = new Request('GET', $steamUrl . '?' . $parameters, $headers);
+        $request = new Request('GET', $steamUrl.'?'.$parameters, $headers);
         $response = $this->sendRequest($request);
 
         // Pass the results back
@@ -163,7 +200,7 @@ class Client
 
         // Pass the results back
         libxml_use_internal_errors(true);
-        $result = simplexml_load_file($steamUrl . '?' . $parameters);
+        $result = simplexml_load_file($steamUrl.'?'.$parameters);
 
         if (! $result) {
             return null;
@@ -198,7 +235,7 @@ class Client
         try {
             $response = $this->client->send($request);
 
-            $result       = new stdClass();
+            $result = new stdClass();
             $result->code = $response->getStatusCode();
             $result->body = json_decode((string) $response->getBody(), null, 512, JSON_THROW_ON_ERROR);
         } catch (ClientException $e) {
@@ -214,7 +251,7 @@ class Client
             throw new ApiCallFailedException('API call failed due to empty response', $result->code);
         }
 
-        if (empty((array)$result->body)) {
+        if (empty((array) $result->body)) {
             throw new ApiCallFailedException('Api call failed to complete due to an empty response.', $result->code);
         }
 
@@ -225,7 +262,7 @@ class Client
     private function buildUrl($version = false): string
     {
         // Set up the basic url
-        $url = $this->url . ($this->interface ?? '') . '/' . $this->method . '/';
+        $url = $this->url.($this->interface ?? '').'/'.$this->method.'/';
 
         // If we have a version, add it
         if ($version) {
@@ -249,16 +286,16 @@ class Client
         }
 
         // Inside the root steam directory
-        $class      = ucfirst((string) $name);
-        $steamClass = '\Syntax\SteamApi\Steam\\' . $class;
+        $class = ucfirst((string) $name);
+        $steamClass = '\Syntax\SteamApi\Steam\\'.$class;
 
         if (class_exists($steamClass)) {
             return new $steamClass($this->steamId);
         }
 
         // Inside a nested directory
-        $class      = implode('\\', preg_split('/(?=[A-Z])/', $class, -1, PREG_SPLIT_NO_EMPTY));
-        $steamClass = '\Syntax\SteamApi\Steam\\' . $class;
+        $class = implode('\\', preg_split('/(?=[A-Z])/', $class, -1, PREG_SPLIT_NO_EMPTY));
+        $steamClass = '\Syntax\SteamApi\Steam\\'.$class;
 
         if (class_exists($steamClass)) {
             return new $steamClass($this->steamId);
@@ -275,7 +312,7 @@ class Client
      */
     protected function sortObjects(Collection $objects): Collection
     {
-        return $objects->sortBy(fn($object) => $object->name);
+        return $objects->sortBy(fn ($object) => $object->name);
     }
 
     /**
@@ -284,7 +321,7 @@ class Client
      */
     protected function setApiDetails(string $method, string $version): void
     {
-        $this->method  = $method;
+        $this->method = $method;
         $this->version = $version;
     }
 
@@ -301,7 +338,7 @@ class Client
         // Get the client
         $body = $this->setUpService($arguments);
 
-        if (!isset($body->response) || empty((array)$body->response)) {
+        if (! isset($body->response) || empty((array) $body->response)) {
             throw new ApiCallFailedException('Api call failed to complete due to an empty response.', 500);
         }
 
@@ -317,7 +354,7 @@ class Client
         // Get the client
         $body = $this->setUpClient($arguments);
 
-        if (!isset($body->response) || empty((array)$body->response)) {
+        if (! isset($body->response) || empty((array) $body->response)) {
             throw new ApiCallFailedException('Api call failed to complete due to an empty response.', 500);
         }
 
@@ -330,14 +367,22 @@ class Client
      */
     protected function getApiKey(): string
     {
-        $apiKey = Config::get('steam-api.steamApiKey');
+        $apiKey = null;
 
-        if ($apiKey == 'YOUR-API-KEY') {
-            throw new Exceptions\InvalidApiKeyException();
+        if (Config::getFacadeRoot() !== null) {
+            $apiKey = Config::get('steam-api.steamApiKey');
         }
 
-        if (is_null($apiKey) || $apiKey === '' || $apiKey == []) {
+        if (! is_string($apiKey) || $apiKey === '') {
+            $apiKey = getenv('STEAM_API_KEY');
+        }
+
+        if (! is_string($apiKey) || $apiKey === '') {
             $apiKey = getenv('apiKey');
+        }
+
+        if (! is_string($apiKey) || $apiKey === '') {
+            throw new InvalidApiKeyException();
         }
 
         return $apiKey;
@@ -354,12 +399,26 @@ class Client
                  * @throws UnrecognizedId
                  */
                 $this->steamId, function (&$id) {
-                // Convert the id to all types and grab the 64 bit version
-                $id = $this->convertToAll($id)->id64;
-            });
+                    // Convert the id to all types and grab the 64 bit version
+                    $id = $this->convertToAll($id)->id64;
+                });
         } else {
             // Convert the id to all types and grab the 64 bit version
             $this->steamId = $this->convertToAll($this->steamId)->id64;
         }
+    }
+
+    private function normalizeSteamId(int|string|array $steamId): string|array
+    {
+        $converter = new SteamIdConverter();
+
+        if (is_array($steamId)) {
+            return array_map(
+                fn (int|string $id): string => $converter->convertId($id, 'id64'),
+                $steamId,
+            );
+        }
+
+        return $converter->convertId($steamId, 'id64');
     }
 }

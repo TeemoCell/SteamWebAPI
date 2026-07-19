@@ -48,13 +48,38 @@ Lastly, publish the config file. You can get your API key from [Steam](http://st
 
 # Usage
 
+Create a client explicitly and reuse it for the endpoint clients. The API key can
+come from Laravel's `steam-api.steamApiKey` configuration, `STEAM_API_KEY`, or the
+legacy `apiKey` environment variable.
+
+```php
+use Syntax\SteamApi\Client;
+
+$steam = new Client(apiKey: $apiKey);
+$apps = $steam->app()->appDetails(620);
+
+echo $apps->first()->name;
+```
+
+Each endpoint can also be constructed directly. An optional Guzzle client can
+be injected as the second argument.
+
+```php
+use Syntax\SteamApi\Steam\App;
+use GuzzleHttp\Client as HttpClient;
+
+$app = new App(apiKey: $apiKey, client: new HttpClient());
+$apps = $app->appDetails(620);
+```
+
+In Laravel, `Syntax\SteamApi\Client` is registered as a singleton and can be
+constructor-injected. The existing facade remains available for backwards
+compatibility:
+
 ```php
 use Syntax\SteamApi\Facades\SteamApi;
 
-/** Get Portal 2 */
 $apps = SteamApi::app()->appDetails(620);
-
-echo $app->first()->name;
 ```
 
 Each service from the Steam API has its own methods you can use.
@@ -89,7 +114,7 @@ This will convert the given steam ID to each type of steam ID (64 bit, 32 bit an
 ##### Example usage
 
 ```php
-SteamApi::convertId($id, $format);
+$steam->convertId($id, $format);
 ```
 
 > Example Output: [convertId](./examples/global/convertId.txt)
@@ -101,7 +126,7 @@ SteamApi::convertId($id, $format);
 The [Steam News](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetNewsForApp_.28v0002.29) web api is used to get articles for games.
 
 ```php
-SteamApi::news()
+$steam->news()
 ```
 
 
@@ -122,7 +147,7 @@ This method will get the news articles for a given app ID. It has three paramete
 
 ```php
 <?php
-	$news = SteamApi::news()->GetNewsForApp($appId, 5, 500)->newsitems;
+	$news = $steam->news()->GetNewsForApp($appId, 5, 500)->newsitems;
 ?>
 ```
 
@@ -137,7 +162,7 @@ The [Player Service](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetO
 When instantiating the player class, you are required to pass a steamId or Steam community ID.
 
 ```php
-SteamApi::player($steamId)
+$steam->player($steamId)
 ```
 
 #### GetSteamLevel
@@ -205,7 +230,7 @@ The [User](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetFriendList_
 When instantiating the user class, you are required to pass at least one steamId or steam community ID.
 
 ```php
-SteamApi::user($steamId)
+$steam->user($steamId)
 ```
 
 #### ResolveVanityURL
@@ -219,7 +244,7 @@ This will return details on the user from their display name.
 | displayName | string | The display name to get the steam ID for. In `http://steamcommunity.com/id/gabelogannewell` it would be `gabelogannewell`. | Yes      | NULL    |
 
 ```php
-	$player = SteamApi::user($steamId)->ResolveVanityURL('gabelogannewell');
+	$player = $steam->user($steamId)->ResolveVanityURL('gabelogannewell');
 ```
 
 > Example Output: [ResolveVanityURL](./examples/user/ResolveVanityURL.txt)
@@ -237,11 +262,11 @@ This will return details on one or more users.
 ```php
 	// One user
 	$steamId = 76561197960287930;
-	$player = SteamApi::user($steamId)->GetPlayerSummaries()[0];
+	$player = $steam->user($steamId)->GetPlayerSummaries()[0];
 
 	// Several users
 	$steamIds = [76561197960287930, 76561197968575517]
-	$players = SteamApi::user($steamIds)->GetPlayerSummaries();
+	$players = $steam->user($steamIds)->GetPlayerSummaries();
 ```
 
 > Example Output: [GetPlayerSummaries](./examples/user/GetPlayerSummaries.txt)
@@ -282,7 +307,7 @@ The [User Stats](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetPlaye
 When instantiating the user stats class, you are required to pass a steamID or Steam community ID.
 
 ```php
-SteamApi::userStats($steamId)
+$steam->userStats($steamId)
 ```
 
 #### GetPlayerAchievements
@@ -342,7 +367,7 @@ Returns a list of game details, including achievements and stats.
 This area will get details for games.
 
 ```php
-SteamApi::app()
+$steam->app()
 ```
 
 #### appDetails
@@ -372,7 +397,7 @@ This method will return an array of app objects directly from Steam. It includes
 This method will get details for packages.
 
 ```php
-SteamApi::package()
+$steam->package()
 ```
 
 #### packageDetails
@@ -396,7 +421,7 @@ This gets all the details for a package. This is most of the information from th
 This method will get user inventory for item.
 
 ```php
-SteamApi::item()
+$steam->item()
 ```
 
 #### GetPlayerItems
@@ -421,7 +446,7 @@ This gets all the item for a user inventory.
 This service is used to get details on a Steam group.
 
 ```php
-SteamApi::group()
+$steam->group()
 ```
 
 #### GetGroupSummary
@@ -438,7 +463,7 @@ This method will get the details for a group.
 
 ```php
 <?php
-	$news = SteamApi::group()->GetGroupSummary('Valve');
+	$news = $steam->group()->GetGroupSummary('Valve');
 ?>
 ```
 
@@ -459,11 +484,11 @@ docker-compose build
 # Install dependencies
 docker-compose run --rm php composer install
 
-# Run tests (assumes apiKey is set in .env file)
+# Run tests (assumes STEAM_API_KEY is set in .env file)
 docker-compose run --rm php composer test
 
-# Or with the apiKey inline
-docker-compose run --rm -e api=YOUR_STEAM_API_KEY php composer test
+# Or with the API key inline
+docker-compose run --rm -e STEAM_API_KEY=YOUR_STEAM_API_KEY php composer test
 
 # With coverage
 docker-compose run --rm php composer coverage

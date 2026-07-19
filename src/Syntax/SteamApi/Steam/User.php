@@ -2,6 +2,7 @@
 
 namespace Syntax\SteamApi\Steam;
 
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use Syntax\SteamApi\Client;
@@ -17,11 +18,11 @@ class User extends Client
         'friend',
     ];
 
-    public function __construct($steamId)
+    public function __construct($steamId, ?string $apiKey = null, ?ClientInterface $client = null)
     {
-        parent::__construct();
+        parent::__construct($apiKey, $client);
         $this->interface = 'ISteamUser';
-        $this->steamId   = $steamId;
+        $this->steamId = $steamId;
     }
 
     /**
@@ -45,7 +46,7 @@ class User extends Client
         }
 
         // Set up the api details
-        $this->method  = __FUNCTION__;
+        $this->method = __FUNCTION__;
         $this->version = 'v0001';
 
         $results = $this->getClientResponse(['vanityurl' => $displayName]);
@@ -59,17 +60,17 @@ class User extends Client
      *
      * @return array
      */
-    public function GetPlayerSummaries(string $steamId = null): array
+    public function GetPlayerSummaries(?string $steamId = null): array
     {
         // Set up the api details
-        $this->method  = __FUNCTION__;
+        $this->method = __FUNCTION__;
         $this->version = 'v0002';
 
         if ($steamId == null) {
             $steamId = $this->steamId;
         }
 
-        $steamId = implode(',', (array)$steamId);
+        $steamId = implode(',', (array) $steamId);
 
         $chunks = array_chunk(explode(',', $steamId), 100);
 
@@ -103,7 +104,7 @@ class User extends Client
     private function compressPlayerSummaries($summaries): array
     {
         $result = [];
-        $keys   = array_keys($summaries);
+        $keys = array_keys($summaries);
 
         foreach ($keys as $key) {
             $result = array_merge($result, $summaries[$key]);
@@ -119,7 +120,7 @@ class User extends Client
     public function GetPlayerBans($steamId = null)
     {
         // Set up the api details
-        $this->method  = __FUNCTION__;
+        $this->method = __FUNCTION__;
         $this->version = 'v1';
 
         if ($steamId == null) {
@@ -128,7 +129,7 @@ class User extends Client
 
         // Set up the arguments
         $arguments = [
-            'steamids' => implode(',', (array)$steamId),
+            'steamids' => implode(',', (array) $steamId),
         ];
 
         // Get the client
@@ -144,16 +145,16 @@ class User extends Client
     public function GetFriendList($relationship = 'all', $summaries = true): array
     {
         // Set up the api details
-        $this->method  = __FUNCTION__;
+        $this->method = __FUNCTION__;
         $this->version = 'v0001';
 
         if (! in_array($relationship, $this->friendRelationships)) {
-            throw new InvalidArgumentException('Provided relationship [' . $relationship . '] is not valid.  Please select from: ' . implode(', ', $this->friendRelationships));
+            throw new InvalidArgumentException('Provided relationship ['.$relationship.'] is not valid.  Please select from: '.implode(', ', $this->friendRelationships));
         }
 
         // Set up the arguments
         $arguments = [
-            'steamid'      => $this->steamId,
+            'steamid' => $this->steamId,
             'relationship' => $relationship,
         ];
 
@@ -167,7 +168,7 @@ class User extends Client
             $steamIds[] = $friend->steamid;
         }
 
-        if($summaries) {
+        if ($summaries) {
             $friends = $this->GetPlayerSummaries(implode(',', $steamIds));
         } else {
             $friends = $steamIds;
@@ -181,7 +182,7 @@ class User extends Client
         $cleanedPlayers = [];
 
         foreach ($players as $player) {
-            if(property_exists($player, 'steamid')) {
+            if (property_exists($player, 'steamid')) {
                 $cleanedPlayers[] = new PlayerContainer($player);
             }
         }
