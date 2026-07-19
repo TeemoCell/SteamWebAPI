@@ -44,6 +44,7 @@ Next, update composer from the terminal.
 Lastly, publish the config file. You can get your API key from [Steam](http://steamcommunity.com/dev/apikey).
 
     php artisan vendor:publish --provider="Syntax\SteamApi\SteamApiServiceProvider"
+
 <hr/>
 
 # Usage
@@ -111,6 +112,11 @@ This will convert the given steam ID to each type of steam ID (64 bit, 32 bit an
 
 > Possible formats are ID64, id64, 64, ID32, id32, 32, ID3, id3 and 3.
 
+Steam2 inputs may use either `STEAM_0` or `STEAM_1`; that prefix is preserved
+when converting the value. Conversions from Steam64 or Steam3 default to the
+legacy-compatible `STEAM_0` representation. Public individuall Steam3 IDs remain
+in the canonical `[U:1:accountId]` form.
+
 ##### Example usage
 
 ```php
@@ -128,8 +134,6 @@ The [Steam News](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetNewsF
 ```php
 $steam->news()
 ```
-
-
 
 ### GetNewsForApp
 
@@ -321,7 +325,6 @@ Returns a list of achievements for this user by app ID.
 | appId | int  | The id of the game you want the user's achievements in | Yes      |
 
 > Example Output: [GetPlayerAchievements](./examples/user/stats/GetPlayerAchievements.txt)
-
 
 #### GetGlobalAchievementPercentagesForApp
 

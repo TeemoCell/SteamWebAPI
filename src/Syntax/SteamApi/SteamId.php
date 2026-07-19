@@ -10,6 +10,8 @@ trait SteamId
 
     private $rawValue;
 
+    private string $steam2Universe = '0';
+
     private static string $ID32 = 'id32';
 
     private static string $ID64 = 'id64';
@@ -27,6 +29,11 @@ trait SteamId
      */
     public function convertId(int|string $id, ?string $format = null)
     {
+        $this->setUpFormatted();
+
+        // STEAM_0 and STEAM_1 are both used for public individual accounts.
+        // Conversions from Steam64 or Steam3 use the legacy/web-compatible 0.
+        $this->steam2Universe = '0';
         $this->convertToAll($id);
 
         switch ($format) {
@@ -77,7 +84,7 @@ trait SteamId
         $z = bcdiv($this->rawValue, '2', 0);
         $y = bcmul($z, '2', 0);
         $y = bcsub($this->rawValue, $y, 0);
-        $formatted = "STEAM_1:$y:$z";
+        $formatted = "STEAM_{$this->steam2Universe}:$y:$z";
         $this->formatted->{self::$ID32} = $formatted;
     }
 
@@ -100,7 +107,7 @@ trait SteamId
     {
         $id = trim((string) $id);
 
-        if (preg_match('/^STEAM_[0-1]:([0-1]):([0-9]+)$/', $id, $matches)) {
+        if (preg_match('/^STEAM_([0-1]):([0-1]):([0-9]+)$/', $id, $matches)) {
             return ['ID32', $matches];
         }
         if (preg_match('/^[0-9]+$/', $id)) {
@@ -124,8 +131,9 @@ trait SteamId
     {
         switch ($type) {
             case 'ID32':
-                $this->rawValue = bcmul((string) $matches[2], '2', 0);
-                $this->rawValue = bcadd($this->rawValue, (string) $matches[1], 0);
+                $this->steam2Universe = $matches[1];
+                $this->rawValue = bcmul((string) $matches[3], '2', 0);
+                $this->rawValue = bcadd($this->rawValue, (string) $matches[2], 0);
 
                 $this->formatted->{self::$ID32} = $id;
 
