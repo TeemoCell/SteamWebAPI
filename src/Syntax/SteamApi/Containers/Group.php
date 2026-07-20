@@ -23,7 +23,7 @@ class Group
     /**
      * @param SimpleXMLElement $group
      */
-    function __construct(SimpleXMLElement $group)
+    public function __construct(SimpleXMLElement $group)
     {
         $this->groupID64 = (string) $group->groupID64;
         $this->groupDetails = new Details($group->groupDetails);

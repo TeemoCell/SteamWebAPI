@@ -12,11 +12,11 @@ class MemberDetails
 
     public $online;
 
-    function __construct($details)
+    public function __construct($details)
     {
-        $this->count  = (int)(string)$details->memberCount;
-        $this->inChat = (int)(string)$details->membersInChat;
-        $this->inGame = (int)(string)$details->membersInGame;
-        $this->online = (int)(string)$details->membersOnline;
+        $this->count = (int) (string) $details->memberCount;
+        $this->inChat = (int) (string) $details->membersInChat;
+        $this->inGame = (int) (string) $details->membersInGame;
+        $this->online = (int) (string) $details->membersOnline;
     }
 }

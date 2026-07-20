@@ -10,12 +10,15 @@ use Syntax\SteamApi\Containers\Game;
 use Syntax\SteamApi\Containers\Player\Level;
 use Syntax\SteamApi\Exceptions\ApiArgumentRequired;
 use Syntax\SteamApi\Exceptions\ApiCallFailedException;
+use function count;
+use function is_null;
 
 class Player extends Client
 {
     public function __construct($steamId, ?string $apiKey = null, ?ClientInterface $client = null)
     {
         parent::__construct($apiKey, $client);
+        $this->url = 'https://partner.steam-api.com/';
         $this->interface = 'IPlayerService';
         $this->isService = true;
         $this->steamId = $steamId;
@@ -30,10 +33,10 @@ class Player extends Client
     public function GetSteamLevel()
     {
         // Set up the api details
-        $this->setApiDetails(__FUNCTION__, 'v0001');
+        $this->setApiDetails(__FUNCTION__, 'v1');
 
         // Set up the arguments
-        $arguments = ['steamId' => $this->steamId];
+        $arguments = ['steamid' => $this->steamId];
 
         // Get the client
         $client = $this->getServiceResponse($arguments);
@@ -67,10 +70,10 @@ class Player extends Client
     public function GetBadges()
     {
         // Set up the api details
-        $this->setApiDetails(__FUNCTION__, 'v0001');
+        $this->setApiDetails(__FUNCTION__, 'v1');
 
         // Set up the arguments
-        $arguments = ['steamId' => $this->steamId];
+        $arguments = ['steamid' => $this->steamId];
 
         // Get the client
         return $this->getServiceResponse($arguments);
@@ -85,10 +88,10 @@ class Player extends Client
     public function GetCommunityBadgeProgress($badgeId = null)
     {
         // Set up the api details
-        $this->setApiDetails(__FUNCTION__, 'v0001');
+        $this->setApiDetails(__FUNCTION__, 'v1');
 
         // Set up the arguments
-        $arguments = ['steamId' => $this->steamId];
+        $arguments = ['steamid' => $this->steamId];
         if ($badgeId != null) {
             $arguments['badgeid'] = $badgeId;
         }
@@ -106,10 +109,10 @@ class Player extends Client
     public function GetOwnedGames($includeAppInfo = true, $includePlayedFreeGames = false, $appIdsFilter = []): Collection
     {
         // Set up the api details
-        $this->setApiDetails(__FUNCTION__, 'v0001');
+        $this->setApiDetails(__FUNCTION__, 'v1');
 
         // Set up the arguments
-        $arguments = ['steamId' => $this->steamId];
+        $arguments = ['steamid' => $this->steamId];
         if ($includeAppInfo) {
             $arguments['include_appinfo'] = $includeAppInfo;
         }
@@ -139,11 +142,11 @@ class Player extends Client
     public function GetRecentlyPlayedGames($count = null): ?Collection
     {
         // Set up the api details
-        $this->setApiDetails(__FUNCTION__, 'v0001');
+        $this->setApiDetails(__FUNCTION__, 'v1');
 
         // Set up the arguments
-        $arguments = ['steamId' => $this->steamId];
-        if (! is_null($count)) {
+        $arguments = ['steamid' => $this->steamId];
+        if ($count !== null) {
             $arguments['count'] = $count;
         }
 
@@ -159,20 +162,39 @@ class Player extends Client
     }
 
     /**
+     * The key must be associated with the requested app for Steam to return data.
+     *
+     * @throws ApiArgumentRequired
+     * @throws ApiCallFailedException
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    public function GetSingleGamePlaytime(int $appId): mixed
+    {
+        $this->setApiDetails(__FUNCTION__, 'v1');
+
+        return $this->getServiceResponse([
+            'steamid' => $this->steamId,
+            'appid' => $appId,
+        ]);
+    }
+
+    /**
      * @throws ApiCallFailedException
      * @throws ApiArgumentRequired
      * @throws GuzzleException
      * @throws \JsonException
-     * @deprecated - use ISteamUser.CheckAppOwnership
+     * @deprecated This endpoint is no longer documented by Steam. Use
+     *             publisher()->CheckAppOwnership() when using a publisher key.
      */
     public function IsPlayingSharedGame($appIdPlaying): string
     {
         // Set up the api details
-        $this->setApiDetails(__FUNCTION__, 'v0001');
+        $this->setApiDetails(__FUNCTION__, 'v1');
 
         // Set up the arguments
         $arguments = [
-            'steamId' => $this->steamId,
+            'steamid' => $this->steamId,
             'appid_playing' => $appIdPlaying,
         ];
 

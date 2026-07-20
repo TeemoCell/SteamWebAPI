@@ -15,7 +15,7 @@ class Package extends Client
     {
         parent::__construct($apiKey, $client);
 
-        $this->url = 'http://store.steampowered.com/';
+        $this->url = 'https://store.steampowered.com/';
         $this->interface = 'api';
     }
 

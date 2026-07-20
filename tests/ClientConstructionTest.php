@@ -6,13 +6,17 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Syntax\SteamApi\Client;
 use Syntax\SteamApi\Steam\App;
+use Syntax\SteamApi\Steam\GameServers;
 use Syntax\SteamApi\Steam\Group;
 use Syntax\SteamApi\Steam\Item;
 use Syntax\SteamApi\Steam\News;
 use Syntax\SteamApi\Steam\Package;
 use Syntax\SteamApi\Steam\Player;
+use Syntax\SteamApi\Steam\Publisher;
 use Syntax\SteamApi\Steam\User;
 use Syntax\SteamApi\Steam\User\Stats;
+use Syntax\SteamApi\Steam\WebApi;
+use Syntax\SteamApi\Steam\Workshop;
 
 class ClientConstructionTest extends TestCase
 {
@@ -30,6 +34,10 @@ class ClientConstructionTest extends TestCase
             [$client->package(), Package::class],
             [$client->group(), Group::class],
             [$client->item(), Item::class],
+            [$client->workshop(), Workshop::class],
+            [$client->webApi(), WebApi::class],
+            [$client->gameServers(), GameServers::class],
+            [$client->publisher(), Publisher::class],
         ];
 
         foreach ($endpoints as [$endpoint, $expectedClass]) {

@@ -19,7 +19,7 @@ class Id
     /**
      * @param integer $id
      */
-    function __construct(int $id)
+    public function __construct(int $id)
     {
         $steamIds = (new SteamIdConverter())->convertId($id);
 

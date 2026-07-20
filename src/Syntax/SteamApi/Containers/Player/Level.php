@@ -20,12 +20,12 @@ class Level
 
     public function __construct($levelDetails)
     {
-        $this->playerXp          = $levelDetails->player_xp;
-        $this->playerLevel       = $levelDetails->player_level;
-        $this->xpToLevelUp       = $levelDetails->player_xp_needed_to_level_up;
+        $this->playerXp = $levelDetails->player_xp;
+        $this->playerLevel = $levelDetails->player_level;
+        $this->xpToLevelUp = $levelDetails->player_xp_needed_to_level_up;
         $this->xpForCurrentLevel = $levelDetails->player_xp_needed_current_level;
 
-        $this->currentLevelFloor   = $this->xpForCurrentLevel;
+        $this->currentLevelFloor = $this->xpForCurrentLevel;
         $this->currentLevelCeiling = $this->playerXp + $this->xpToLevelUp;
 
         // arbitrary range formula. n = value in the middle ( n - min ) / ( max - min ) * 100

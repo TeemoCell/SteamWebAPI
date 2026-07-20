@@ -26,17 +26,17 @@ class Details extends BaseContainer
 
     public $avatarFullUrl;
 
-    function __construct($details)
+    public function __construct($details)
     {
-        $this->name            = (string)$details->groupName;
-        $this->url             = (string)$details->groupUrl;
-        $this->headline        = (string)$details->headline;
-        $this->summary         = (string)$details->summary;
-        $this->avatarIcon      = $this->getImageForAvatar((string)$details->avatarIcon);
-        $this->avatarMedium    = $this->getImageForAvatar((string)$details->avatarMedium);
-        $this->avatarFull      = $this->getImageForAvatar((string)$details->avatarFull);
-        $this->avatarIconUrl   = (string)$details->avatarIcon;
-        $this->avatarMediumUrl = (string)$details->avatarMedium;
-        $this->avatarFullUrl   = (string)$details->avatarFull;
+        $this->name = (string) $details->groupName;
+        $this->url = (string) $details->groupUrl;
+        $this->headline = (string) $details->headline;
+        $this->summary = (string) $details->summary;
+        $this->avatarIcon = $this->getImageForAvatar((string) $details->avatarIcon);
+        $this->avatarMedium = $this->getImageForAvatar((string) $details->avatarMedium);
+        $this->avatarFull = $this->getImageForAvatar((string) $details->avatarFull);
+        $this->avatarIconUrl = (string) $details->avatarIcon;
+        $this->avatarMediumUrl = (string) $details->avatarMedium;
+        $this->avatarFullUrl = (string) $details->avatarFull;
     }
 }

@@ -11,9 +11,10 @@ use Syntax\SteamApi\Exceptions\ApiCallFailedException;
 
 class Stats extends Client
 {
-    public function __construct($steamId, ?string $apiKey = null, ?ClientInterface $client = null)
+    public function __construct($steamId = null, ?string $apiKey = null, ?ClientInterface $client = null)
     {
         parent::__construct($apiKey, $client);
+        $this->url = 'https://partner.steam-api.com/';
         $this->interface = 'ISteamUserStats';
         $this->steamId = $steamId;
     }
@@ -24,44 +25,41 @@ class Stats extends Client
      * @return array|null
      * @throws GuzzleException
      * @throws ApiCallFailedException
-     * @deprecated
+     * @deprecated Use GetPlayerAchievements().
      *
      */
     public function GetPlayerAchievementsAPI($appId): ?array
     {
-        // Set up the api details
-        $this->method = 'GetPlayerAchievementsAPI';
-        $this->version = 'v0001';
-
-        // Set up the arguments
-        $arguments = [
-            'steamid' => $this->steamId,
-            'appid' => $appId,
-            'l' => 'english',
-        ];
-
-        // Get the client
-        $stats = $this->GetSchemaForGame($appId);
-
-        // Make sure the game has achievements
-        if ($stats == null || $stats->game->availableGameStats->achievements == null) {
-            return null;
-        }
-
-        $client = $this->setUpClient($arguments)->playerstats;
-        $stats = $stats->game->availableGameStats->achievements;
-
-        // Clean up the games
-        return $this->convertToObjects($client->achievements);
+        return $this->GetPlayerAchievements($appId);
     }
 
     public function GetPlayerAchievements($appId): ?array
     {
-        // Set up the api details
+        $this->setStatsApiDetails(__FUNCTION__, 'v1');
+
+        $response = $this->setUpClient([
+            'steamid' => $this->steamId,
+            'appid' => $appId,
+            'l' => 'english',
+        ]);
+
+        if (! isset($response->playerstats->achievements)
+            || ! is_array($response->playerstats->achievements)) {
+            return null;
+        }
+
+        return $this->convertToObjects($response->playerstats->achievements);
+    }
+
+    /**
+     * @deprecated Community XML is a legacy fallback. Use GetPlayerAchievements().
+     */
+    public function GetPlayerAchievementsFromCommunity($appId): ?array
+    {
         $this->interface = null;
         $this->method = 'achievements';
 
-        $this->url = (is_numeric($this->steamId)) ? 'http://steamcommunity.com/profiles/' : 'http://steamcommunity.com/id/';
+        $this->url = (is_numeric($this->steamId)) ? 'https://steamcommunity.com/profiles/' : 'https://steamcommunity.com/id/';
 
         $this->url = $this->url.$this->steamId.'/stats/'.$appId;
 
@@ -104,9 +102,7 @@ class Stats extends Client
      */
     public function GetGlobalAchievementPercentagesForApp($gameId)
     {
-        // Set up the api details
-        $this->method = __FUNCTION__;
-        $this->version = 'v0002';
+        $this->setStatsApiDetails(__FUNCTION__, 'v2');
 
         // Set up the arguments
         $arguments = [
@@ -137,9 +133,7 @@ class Stats extends Client
      */
     public function GetUserStatsForGame(int $appId, bool $all = false): mixed
     {
-        // Set up the api details
-        $this->method = __FUNCTION__;
-        $this->version = 'v0002';
+        $this->setStatsApiDetails(__FUNCTION__, 'v2');
 
         // Set up the arguments
         $arguments = [
@@ -182,9 +176,7 @@ class Stats extends Client
      */
     public function GetSchemaForGame($appId): mixed
     {
-        // Set up the api details
-        $this->method = __FUNCTION__;
-        $this->version = 'v0002';
+        $this->setStatsApiDetails(__FUNCTION__, 'v2');
 
         // Set up the arguments
         $arguments = [
@@ -196,6 +188,21 @@ class Stats extends Client
         return $this->setUpClient($arguments);
     }
 
+    /**
+     * Return the number of players currently connected to Steam for an app.
+     *
+     * @throws ApiCallFailedException
+     * @throws GuzzleException
+     */
+    public function GetNumberOfCurrentPlayers(int $appId): int
+    {
+        $this->setStatsApiDetails(__FUNCTION__, 'v1');
+
+        $response = $this->setUpClient(['appid' => $appId]);
+
+        return (int) ($response->response->player_count ?? 0);
+    }
+
     protected function convertToObjects($achievements): array
     {
         $cleanedAchievements = [];
@@ -205,5 +212,13 @@ class Stats extends Client
         }
 
         return $cleanedAchievements;
+    }
+
+    private function setStatsApiDetails(string $method, string $version): void
+    {
+        $this->url = 'https://partner.steam-api.com/';
+        $this->interface = 'ISteamUserStats';
+        $this->method = $method;
+        $this->version = $version;
     }
 }

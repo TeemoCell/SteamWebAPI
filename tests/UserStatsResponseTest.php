@@ -1,9 +1,11 @@
 <?php
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Syntax\SteamApi\Steam\User\Stats;
 
+#[AllowMockObjectsWithoutExpectations]
 class UserStatsResponseTest extends TestCase
 {
     public function test_global_achievement_percentages_returns_empty_array_when_wrapper_is_missing(): void

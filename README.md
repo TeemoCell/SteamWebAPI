@@ -24,6 +24,12 @@ This package provides an easy way to get details from the Steam Web API service.
 - `ISteamUser`
 - `ISteamUserStats`
 - `IStoreService`
+- `IPublishedFileService`
+- `ISteamWebAPIUtil`
+- `IGameServersService`
+
+Publisher-key methods for `ISteamUser` and `ISteamNews` are exposed separately
+through `publisher()` so they are not confused with normal user-key calls.
 
 <hr/>
 
@@ -41,7 +47,7 @@ Next, update composer from the terminal.
 
 > Alternately, you can run "composer require syntax/steam-api:dev-master" from the command line.
 
-Lastly, publish the config file. You can get your API key from [Steam](http://steamcommunity.com/dev/apikey).
+Lastly, publish the config file. You can get your API key from [Steam](https://steamcommunity.com/dev/apikey).
 
     php artisan vendor:publish --provider="Syntax\SteamApi\SteamApiServiceProvider"
 
@@ -94,6 +100,10 @@ Each service from the Steam API has its own methods you can use.
 - [Package](#package)
 - [Item](#item)
 - [Group](#group)
+- [Workshop](#workshop)
+- [Web API utilities](#web-api-utilities)
+- [Game servers](#game-servers)
+- [Publisher API](#publisher-api)
 
 ## Global
 
@@ -129,7 +139,7 @@ $steam->convertId($id, $format);
 
 ## News
 
-The [Steam News](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetNewsForApp_.28v0002.29) web api is used to get articles for games.
+The [Steam News](https://partner.steamgames.com/doc/webapi/ISteamNews) Web API is used to get articles for games.
 
 ```php
 $steam->news()
@@ -137,7 +147,8 @@ $steam->news()
 
 ### GetNewsForApp
 
-This method will get the news articles for a given app ID. It has three parameters.
+This method gets news articles for an app and supports all filters documented by
+the current `ISteamNews/GetNewsForApp/v2` endpoint.
 
 ##### Arguments
 
@@ -146,6 +157,8 @@ This method will get the news articles for a given app ID. It has three paramete
 | appId     | int  | The id for the app you want news on        | Yes      |
 | count     | int  | The number of news items to return         | No       | 5       |
 | maxlength | int  | The maximum number of characters to return | No       | null    |
+| endDate   | int  | Return posts earlier than this Unix timestamp | No     | null    |
+| feeds     | string or array | Feed names to include            | No       | null    |
 
 ##### Example usage
 
@@ -161,7 +174,7 @@ This method will get the news articles for a given app ID. It has three paramete
 
 ## Player
 
-The [Player Service](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetOwnedGames_.28v0001.29) is used to get details on players.
+The [Player Service](https://partner.steamgames.com/doc/webapi/IPlayerService) is used to get details on players.
 
 When instantiating the player class, you are required to pass a steamId or Steam community ID.
 
@@ -213,23 +226,26 @@ GetRecentlyPlayedGames returns a list of games a player has played in the last t
 
 > Example Output: [GetRecentlyPlayedGames](./examples/player/GetRecentlyPlayedGames.txt)
 
-#### IsPlayingSharedGame
+#### GetSingleGamePlaytime
 
-IsPlayingSharedGame returns the original owner's SteamID if a borrowing account is currently playing this game. If the game is not borrowed or the borrower currently doesn't play this game, the result is always 0.
+Returns the playtime for one app. Steam only returns this information when the
+Web API key is associated with the requested app.
 
 ##### Arguments
 
-| Name  | Type | Description           | Required | Default |
-| ----- | ---- | --------------------- | -------- | ------- |
-| appId | int  | The game to check for | Yes      |
+| Name  | Type | Description                              | Required | Default |
+| ----- | ---- | ---------------------------------------- | -------- | ------- |
+| appId | int  | The app whose playtime should be queried | Yes      |
 
-> Example Output: [IsPlayingSharedGame](./examples/player/IsPlayingSharedGame.txt)
+`IsPlayingSharedGame` remains available for backwards compatibility, but Steam
+no longer documents that endpoint. Publisher integrations should use
+`publisher()->CheckAppOwnership()` instead.
 
 <hr/>
 
 ## User
 
-The [User](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetFriendList_.28v0001.29) WebAPI call is used to get details about the user specifically.
+The [User](https://partner.steamgames.com/doc/webapi/ISteamUser) Web API is used to get details about the user specifically.
 
 When instantiating the user class, you are required to pass at least one steamId or steam community ID.
 
@@ -245,7 +261,8 @@ This will return details on the user from their display name.
 
 | Name        | Type   | Description                                                                                                                | Required | Default |
 | ----------- | ------ | -------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| displayName | string | The display name to get the steam ID for. In `http://steamcommunity.com/id/gabelogannewell` it would be `gabelogannewell`. | Yes      | NULL    |
+| displayName | string | The display name to get the steam ID for. In `https://steamcommunity.com/id/gabelogannewell` it would be `gabelogannewell`. | Yes      | NULL    |
+| urlType | int | Vanity URL type: individual profile (1), group (2), or official game group (3). | No | 1 |
 
 ```php
 	$player = $steam->user($steamId)->ResolveVanityURL('gabelogannewell');
@@ -306,9 +323,10 @@ Returns the possible bans placed on the provided steam ID(s).
 
 ## User Stats
 
-The [User Stats](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetPlayerAchievements_.28v0001.29) WebAPI call is used to get details about a user's gaming.
+The [User Stats](https://partner.steamgames.com/doc/webapi/ISteamUserStats) Web API is used to get details about a user's gaming.
 
-When instantiating the user stats class, you are required to pass a steamID or Steam community ID.
+A SteamID or Steam community ID is required for user-specific calls. App-wide
+methods such as `GetNumberOfCurrentPlayers` can use `userStats()` without one.
 
 ```php
 $steam->userStats($steamId)
@@ -362,6 +380,15 @@ Returns a list of game details, including achievements and stats.
 | appId | int  | The ID of the game you want the details for. | Yes      |
 
 > Example Output: [GetSchemaForGame](./examples/user/stats/GetSchemaForGame.txt)
+
+#### GetNumberOfCurrentPlayers
+
+Returns the number of players currently connected to Steam for an app. No
+SteamID is required:
+
+```php
+$playerCount = $steam->userStats()->GetNumberOfCurrentPlayers(620);
+```
 
 <hr/>
 
@@ -478,6 +505,59 @@ This method will get the details for a group.
 ```
 
 > Example Output: [GetGroupSummary](./examples/group/GetGroupSummary.txt)
+
+<hr/>
+
+## Workshop
+
+`IPublishedFileService/QueryFiles/v1` searches Steam Workshop items. Official
+filters are passed as an associative array and cursor pagination starts at `*`.
+
+```php
+$files = $steam->workshop()->QueryFiles([
+    'query_type' => 1,
+    'appid' => 620,
+    'return_tags' => true,
+]);
+```
+
+## Web API utilities
+
+```php
+$serverInfo = $steam->webApi()->GetServerInfo();
+$supportedApis = $steam->webApi()->GetSupportedAPIList();
+```
+
+## Game servers
+
+Read-only `IGameServersService` calls are grouped under `gameServers()`:
+
+```php
+$accounts = $steam->gameServers()->GetAccountList();
+$token = $steam->gameServers()->QueryLoginToken($loginToken);
+```
+
+The client also provides `GetAccountPublicInfo`, `GetServerSteamIDsByIP`, and
+`GetServerIPsBySteamID`. Account creation, token resets, and deletion are not
+exposed because they mutate server credentials.
+
+## Publisher API
+
+These methods require a Steamworks publisher key and must only run on a trusted
+server. Never expose a publisher key to a browser or game client.
+
+```php
+$publisher = (new Client(apiKey: $publisherKey))->publisher();
+$ownership = $publisher->CheckAppOwnership($steamId, $appId);
+$news = $publisher->GetNewsForAppAuthed($appId);
+```
+
+## Legacy endpoints
+
+`appDetails`, `packageDetails`, `GetPlayerItems`, group XML, and
+`GetPlayerAchievementsFromCommunity` use legacy Store or Community endpoints.
+They remain available for compatibility but are not equivalent to documented
+Steamworks Web API interfaces.
 
 <hr/>
 

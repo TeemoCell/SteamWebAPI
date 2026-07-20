@@ -33,7 +33,7 @@ class Package extends BaseContainer
 
     protected function getFakePriceObject(): \stdClass
     {
-        $object        = new \stdClass();
+        $object = new \stdClass();
         $object->final = 'No price found';
         return $object;
     }

@@ -36,7 +36,7 @@ jobs:
         run: composer update --no-interaction --prefer-dist
 
       - name: PHP ${{ matrix.php }} - Run offline test suite
-        run: vendor/bin/phpunit --filter "AppListTest|ClientConstructionTest"
+        run: vendor/bin/phpunit --filter "AppListTest|ClientConstructionTest|CurrentApiEndpointsTest|UserStatsResponseTest|LaravelClientBindingTest"
 
       - name: PHP ${{ matrix.php }} - Run full test suite
         if: env.STEAM_API_KEY != ''

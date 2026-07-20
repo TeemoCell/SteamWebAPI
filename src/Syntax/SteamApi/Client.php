@@ -19,12 +19,16 @@ use Syntax\SteamApi\Exceptions\InvalidApiKeyException;
 use Syntax\SteamApi\Exceptions\UnrecognizedId;
 use Syntax\SteamApi\Steam\App;
 use Syntax\SteamApi\Steam\Group;
+use Syntax\SteamApi\Steam\GameServers;
 use Syntax\SteamApi\Steam\Item;
 use Syntax\SteamApi\Steam\News;
 use Syntax\SteamApi\Steam\Package;
 use Syntax\SteamApi\Steam\Player;
+use Syntax\SteamApi\Steam\Publisher;
 use Syntax\SteamApi\Steam\User;
 use Syntax\SteamApi\Steam\User\Stats;
+use Syntax\SteamApi\Steam\WebApi;
+use Syntax\SteamApi\Steam\Workshop;
 
 /**
  * The explicit endpoint methods are the preferred API. The magic fallback in
@@ -36,7 +40,7 @@ class Client
 
     public array $validFormats = ['json', 'xml', 'vdf'];
 
-    protected string $url = 'http://api.steampowered.com/';
+    protected string $url = 'https://api.steampowered.com/';
 
     protected ClientInterface $client;
 
@@ -44,7 +48,7 @@ class Client
 
     protected string $method;
 
-    protected ?string $version = 'v0002';
+    protected ?string $version = 'v2';
 
     protected string $apiKey;
 
@@ -95,9 +99,13 @@ class Client
         return new User($this->normalizeSteamId($steamId), $this->apiKey, $this->client);
     }
 
-    public function userStats(int|string $steamId): Stats
+    public function userStats(int|string|null $steamId = null): Stats
     {
-        return new Stats($this->normalizeSteamId($steamId), $this->apiKey, $this->client);
+        return new Stats(
+            $steamId === null ? null : $this->normalizeSteamId($steamId),
+            $this->apiKey,
+            $this->client,
+        );
     }
 
     public function app(): App
@@ -118,6 +126,26 @@ class Client
     public function item(): Item
     {
         return new Item($this->apiKey, $this->client);
+    }
+
+    public function workshop(): Workshop
+    {
+        return new Workshop($this->apiKey, $this->client);
+    }
+
+    public function webApi(): WebApi
+    {
+        return new WebApi($this->apiKey, $this->client);
+    }
+
+    public function gameServers(): GameServers
+    {
+        return new GameServers($this->apiKey, $this->client);
+    }
+
+    public function publisher(): Publisher
+    {
+        return new Publisher($this->apiKey, $this->client);
     }
 
     /**

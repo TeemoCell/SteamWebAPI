@@ -19,11 +19,16 @@ class News extends Client
      * @throws ApiCallFailedException
      * @throws GuzzleException
      */
-    public function GetNewsForApp($appId, $count = 5, $maxLength = null)
-    {
+    public function GetNewsForApp(
+        $appId,
+        $count = 5,
+        $maxLength = null,
+        $endDate = null,
+        array|string|null $feeds = null,
+    ) {
         // Set up the api details
         $this->method = __FUNCTION__;
-        $this->version = 'v0002';
+        $this->version = 'v2';
 
         // Set up the arguments
         $arguments = [
@@ -33,6 +38,14 @@ class News extends Client
 
         if (! is_null($maxLength)) {
             $arguments['maxlength'] = $maxLength;
+        }
+
+        if (! is_null($endDate)) {
+            $arguments['enddate'] = $endDate;
+        }
+
+        if (! is_null($feeds)) {
+            $arguments['feeds'] = implode(',', (array) $feeds);
         }
 
         // Get the client

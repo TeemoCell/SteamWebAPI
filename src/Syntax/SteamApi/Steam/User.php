@@ -21,6 +21,7 @@ class User extends Client
     public function __construct($steamId, ?string $apiKey = null, ?ClientInterface $client = null)
     {
         parent::__construct($apiKey, $client);
+        $this->url = 'https://partner.steam-api.com/';
         $this->interface = 'ISteamUser';
         $this->steamId = $steamId;
     }
@@ -38,7 +39,7 @@ class User extends Client
      * @throws UnrecognizedId
      * @throws \JsonException
      */
-    public function ResolveVanityURL($displayName = null): mixed
+    public function ResolveVanityURL($displayName = null, int $urlType = 1): mixed
     {
         // This only works with a display name.  Make sure we have one.
         if ($displayName == null) {
@@ -47,9 +48,12 @@ class User extends Client
 
         // Set up the api details
         $this->method = __FUNCTION__;
-        $this->version = 'v0001';
+        $this->version = 'v1';
 
-        $results = $this->getClientResponse(['vanityurl' => $displayName]);
+        $results = $this->getClientResponse([
+            'vanityurl' => $displayName,
+            'url_type' => $urlType,
+        ]);
 
         // Return the full steam ID object for the display name.
         return $results->message ?? $this->convertId($results->steamid);
@@ -64,7 +68,7 @@ class User extends Client
     {
         // Set up the api details
         $this->method = __FUNCTION__;
-        $this->version = 'v0002';
+        $this->version = 'v2';
 
         if ($steamId == null) {
             $steamId = $this->steamId;
@@ -146,10 +150,10 @@ class User extends Client
     {
         // Set up the api details
         $this->method = __FUNCTION__;
-        $this->version = 'v0001';
+        $this->version = 'v1';
 
         if (! in_array($relationship, $this->friendRelationships)) {
-            throw new InvalidArgumentException('Provided relationship ['.$relationship.'] is not valid.  Please select from: '.implode(', ', $this->friendRelationships));
+            throw new InvalidArgumentException("Provided relationship [$relationship] is not valid.  Please select from: ".implode(', ', $this->friendRelationships));
         }
 
         // Set up the arguments
