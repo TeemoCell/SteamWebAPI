@@ -161,6 +161,44 @@ class CurrentApiEndpointsTest extends TestCase
         self::assertSame('/ISteamWebAPIUtil/GetSupportedAPIList/v1/', $utilityHistory->requests[0]['request']->getUri()->getPath());
     }
 
+    public function test_publisher_inventory_endpoints_use_official_service_calls(): void
+    {
+        [$client, $history] = $this->clientWithResponses([
+            ['response' => ['item_json' => json_encode([
+                ['itemid' => '100', 'itemdefid' => '10'],
+            ], JSON_THROW_ON_ERROR)]],
+            ['response' => ['itemdef_json' => json_encode([
+                ['itemdefid' => '10', 'name' => 'Test item'],
+            ], JSON_THROW_ON_ERROR)]],
+            ['response' => ['prices' => [['itemdefid' => '10', 'price' => 99]]]],
+        ]);
+
+        $publisher = new Publisher('publisher-key', $client);
+        $items = $publisher->GetInventory(620, '76561198336555523');
+        $definitions = $publisher->GetItemDefs(620, ['itemdefids' => [10]]);
+        $prices = $publisher->GetPriceSheet(3);
+
+        self::assertSame('100', $items[0]->itemid);
+        self::assertSame('Test item', $definitions[0]->name);
+        self::assertSame(99, $prices->prices[0]->price);
+
+        self::assertSame('/IInventoryService/GetInventory/v1/', $history->requests[0]['request']->getUri()->getPath());
+        self::assertSame([
+            'appid' => 620,
+            'steamid' => '76561198336555523',
+        ], $this->requestInput($history->requests[0]['request']));
+
+        self::assertSame('/IInventoryService/GetItemDefs/v1/', $history->requests[1]['request']->getUri()->getPath());
+        self::assertSame([
+            'appid' => 620,
+            'itemdefids' => [10],
+        ], $this->requestInput($history->requests[1]['request']));
+
+        self::assertSame('api.steampowered.com', $history->requests[2]['request']->getUri()->getHost());
+        self::assertSame('/IInventoryService/GetPriceSheet/v1/', $history->requests[2]['request']->getUri()->getPath());
+        self::assertSame(['ecurrency' => 3], $this->requestInput($history->requests[2]['request']));
+    }
+
     private function clientWithResponses(array $responses): array
     {
         $history = new stdClass();

@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use TeemoCell\SteamWebApi\Client;
 use TeemoCell\SteamWebApi\Steam\App;
+use TeemoCell\SteamWebApi\Steam\CommunityInventory;
 use TeemoCell\SteamWebApi\Steam\GameServers;
 use TeemoCell\SteamWebApi\Steam\Group;
 use TeemoCell\SteamWebApi\Steam\Item;
@@ -34,6 +35,7 @@ class ClientConstructionTest extends TestCase
             [$client->package(), Package::class],
             [$client->group(), Group::class],
             [$client->item(), Item::class],
+            [$client->communityInventory(), CommunityInventory::class],
             [$client->workshop(), Workshop::class],
             [$client->webApi(), WebApi::class],
             [$client->gameServers(), GameServers::class],

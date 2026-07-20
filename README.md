@@ -73,9 +73,34 @@ php artisan vendor:publish --provider="TeemoCell\SteamWebApi\SteamApiServiceProv
 - `IPublishedFileService`
 - `ISteamWebAPIUtil`
 - read-only `IGameServersService`
-- publisher-key methods for `ISteamUser` and `ISteamNews`
+- publisher-key methods for `ISteamUser`, `ISteamNews` and `IInventoryService`
+- experimental public Steam Community inventories
 
 Legacy Store and Steam Community endpoints remain available for backwards compatibility.
+
+Public Community inventories include assets, names, descriptions, images and
+market metadata. Steam does not officially document this Community endpoint,
+so the client is explicitly experimental:
+
+```php
+$inventory = $steam->communityInventory()->GetInventory(
+    steamId: $steamId,
+    appId: 730,
+    contextId: 2,
+);
+```
+
+Publisher keys can use the official inventory service for their own apps:
+
+```php
+$publisher = (new Client(apiKey: $publisherKey))->publisher();
+$items = $publisher->GetInventory($appId, $steamId);
+$definitions = $publisher->GetItemDefs($appId);
+$prices = $publisher->GetPriceSheet($currency);
+```
+
+`GetPriceSheet()` returns Inventory Service store prices, not Community Market
+resale prices.
 
 ## Documentation
 
@@ -86,6 +111,7 @@ Full installation, configuration, endpoint and migration documentation is availa
 - [Laravel integration](https://github.com/TeemoCell/SteamWebAPI/wiki/Laravel-Integration)
 - [Client usage](https://github.com/TeemoCell/SteamWebAPI/wiki/Client-Usage)
 - [Endpoint reference](https://github.com/TeemoCell/SteamWebAPI/wiki/Endpoints)
+- [Community inventories](https://github.com/TeemoCell/SteamWebAPI/wiki/Endpoints-Community-Inventory)
 - [Error handling](https://github.com/TeemoCell/SteamWebAPI/wiki/Error-Handling)
 - [Migration guide](https://github.com/TeemoCell/SteamWebAPI/wiki/Migration-Guide)
 
@@ -94,7 +120,7 @@ Full installation, configuration, endpoint and migration documentation is availa
 Run the deterministic offline suite:
 
 ```bash
-php vendor/bin/phpunit --filter "AppListTest|ClientConstructionTest|CurrentApiEndpointsTest|UserStatsResponseTest|LaravelClientBindingTest"
+php vendor/bin/phpunit --filter "AppListTest|ClientConstructionTest|CommunityInventoryTest|CurrentApiEndpointsTest|UserStatsResponseTest|LaravelClientBindingTest"
 ```
 
 The complete suite contains live Steam API tests and requires `STEAM_API_KEY`.

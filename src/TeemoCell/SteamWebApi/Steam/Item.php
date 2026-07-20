@@ -22,6 +22,9 @@ class Item extends Client
     }
 
     /**
+     * @deprecated Use communityInventory()->GetInventory() for public Community
+     *             inventories or publisher()->GetInventory() for your own app.
+     *
      * @throws ApiCallFailedException
      * @throws GuzzleException
      */

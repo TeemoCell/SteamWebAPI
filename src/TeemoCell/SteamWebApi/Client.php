@@ -18,6 +18,7 @@ use TeemoCell\SteamWebApi\Exceptions\ClassNotFoundException;
 use TeemoCell\SteamWebApi\Exceptions\InvalidApiKeyException;
 use TeemoCell\SteamWebApi\Exceptions\UnrecognizedId;
 use TeemoCell\SteamWebApi\Steam\App;
+use TeemoCell\SteamWebApi\Steam\CommunityInventory;
 use TeemoCell\SteamWebApi\Steam\Group;
 use TeemoCell\SteamWebApi\Steam\GameServers;
 use TeemoCell\SteamWebApi\Steam\Item;
@@ -126,6 +127,11 @@ class Client
     public function item(): Item
     {
         return new Item($this->apiKey, $this->client);
+    }
+
+    public function communityInventory(): CommunityInventory
+    {
+        return new CommunityInventory($this->apiKey, $this->client);
     }
 
     public function workshop(): Workshop
@@ -315,7 +321,7 @@ class Client
 
         // Inside the root steam directory
         $class = ucfirst((string) $name);
-        $steamClass = '\TeemoCell\SteamWebApi\Steam\\'.$class;
+        $steamClass = "\\TeemoCell\\SteamWebApi\\Steam\\$class";
 
         if (class_exists($steamClass)) {
             return new $steamClass($this->steamId);
@@ -323,7 +329,7 @@ class Client
 
         // Inside a nested directory
         $class = implode('\\', preg_split('/(?=[A-Z])/', $class, -1, PREG_SPLIT_NO_EMPTY));
-        $steamClass = '\TeemoCell\SteamWebApi\Steam\\'.$class;
+        $steamClass = "\\TeemoCell\\SteamWebApi\\Steam\\$class";
 
         if (class_exists($steamClass)) {
             return new $steamClass($this->steamId);
@@ -401,15 +407,15 @@ class Client
             $apiKey = Config::get('steam-api.steamApiKey');
         }
 
-        if (! is_string($apiKey) || $apiKey === '') {
+        if (! \is_string($apiKey) || $apiKey === '') {
             $apiKey = getenv('STEAM_API_KEY');
         }
 
-        if (! is_string($apiKey) || $apiKey === '') {
+        if (! \is_string($apiKey) || $apiKey === '') {
             $apiKey = getenv('apiKey');
         }
 
-        if (! is_string($apiKey) || $apiKey === '') {
+        if (! \is_string($apiKey) || $apiKey === '') {
             throw new InvalidApiKeyException();
         }
 
@@ -421,7 +427,7 @@ class Client
      */
     private function convertSteamIdTo64(): void
     {
-        if (is_array($this->steamId)) {
+        if (\is_array($this->steamId)) {
             array_walk(
                 /**
                  * @throws UnrecognizedId
@@ -440,7 +446,7 @@ class Client
     {
         $converter = new SteamIdConverter();
 
-        if (is_array($steamId)) {
+        if (\is_array($steamId)) {
             return array_map(
                 fn (int|string $id): string => $converter->convertId($id, 'id64'),
                 $steamId,
