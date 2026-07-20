@@ -9,8 +9,8 @@ A modern PHP client for the Steam Web API with optional Laravel integration.
 
 ## Requirements
 
-- PHP 8.1 or newer
-- Laravel 10, 11, 12 or 13 when used inside Laravel
+- PHP 8.2 or newer
+- Laravel 12.61.1 or newer, or Laravel 13.12.0 or newer, when used inside Laravel
 - A [Steam Web API key](https://steamcommunity.com/dev/apikey)
 
 ## Installation
