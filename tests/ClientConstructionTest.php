@@ -4,19 +4,19 @@ use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
-use Syntax\SteamApi\Client;
-use Syntax\SteamApi\Steam\App;
-use Syntax\SteamApi\Steam\GameServers;
-use Syntax\SteamApi\Steam\Group;
-use Syntax\SteamApi\Steam\Item;
-use Syntax\SteamApi\Steam\News;
-use Syntax\SteamApi\Steam\Package;
-use Syntax\SteamApi\Steam\Player;
-use Syntax\SteamApi\Steam\Publisher;
-use Syntax\SteamApi\Steam\User;
-use Syntax\SteamApi\Steam\User\Stats;
-use Syntax\SteamApi\Steam\WebApi;
-use Syntax\SteamApi\Steam\Workshop;
+use TeemoCell\SteamWebApi\Client;
+use TeemoCell\SteamWebApi\Steam\App;
+use TeemoCell\SteamWebApi\Steam\GameServers;
+use TeemoCell\SteamWebApi\Steam\Group;
+use TeemoCell\SteamWebApi\Steam\Item;
+use TeemoCell\SteamWebApi\Steam\News;
+use TeemoCell\SteamWebApi\Steam\Package;
+use TeemoCell\SteamWebApi\Steam\Player;
+use TeemoCell\SteamWebApi\Steam\Publisher;
+use TeemoCell\SteamWebApi\Steam\User;
+use TeemoCell\SteamWebApi\Steam\User\Stats;
+use TeemoCell\SteamWebApi\Steam\WebApi;
+use TeemoCell\SteamWebApi\Steam\Workshop;
 
 class ClientConstructionTest extends TestCase
 {

@@ -1,4 +1,4 @@
-Syntax\SteamApi\Containers\Player\Level Object
+TeemoCell\SteamWebApi\Containers\Player\Level Object
 (
     [playerXp] => 63986
     [playerLevel] => 108

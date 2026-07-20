@@ -1,7 +1,7 @@
-Syntax\SteamApi\Containers\Group Object
+TeemoCell\SteamWebApi\Containers\Group Object
 (
     [groupID64] => 103582791429521412
-    [groupDetails] => Syntax\SteamApi\Containers\Group\Details Object
+    [groupDetails] => TeemoCell\SteamWebApi\Containers\Group\Details Object
         (
             [name] => Valve
             [url] => 
@@ -15,7 +15,7 @@ Syntax\SteamApi\Containers\Group Object
             [avatarFullUrl] => https://avatars.cloudflare.steamstatic.com/7ba781b5f0b8a99d4cc0b0b0dcaa22df73db7db2_full.jpg
         )
 
-    [memberDetails] => Syntax\SteamApi\Containers\Group\MemberDetails Object
+    [memberDetails] => TeemoCell\SteamWebApi\Containers\Group\MemberDetails Object
         (
             [count] => 209
             [inChat] => 50

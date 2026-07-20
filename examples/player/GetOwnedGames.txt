@@ -2,7 +2,7 @@ Illuminate\Support\Collection Object
 (
     [items:protected] => Array
         (
-            [182] => Syntax\SteamApi\Containers\Game Object
+            [182] => TeemoCell\SteamWebApi\Containers\Game Object
                 (
                     [appId] => 439550
                     [name] => 'n Verlore Verstand
@@ -16,7 +16,7 @@ Illuminate\Support\Collection Object
                     [hasCommunityVisibleStats] => 1
                 )
 
-            [306] => Syntax\SteamApi\Containers\Game Object
+            [306] => TeemoCell\SteamWebApi\Containers\Game Object
                 (
                     [appId] => 821720
                     [name] => 20.000 Leagues Under The Sea - Captain Nemo
@@ -30,7 +30,7 @@ Illuminate\Support\Collection Object
                     [hasCommunityVisibleStats] => 0
                 )
 
-            [88] => Syntax\SteamApi\Containers\Game Object
+            [88] => TeemoCell\SteamWebApi\Containers\Game Object
                 (
                     [appId] => 264280
                     [name] => 99 Levels To Hell
@@ -44,7 +44,7 @@ Illuminate\Support\Collection Object
                     [hasCommunityVisibleStats] => 1
                 )
 
-            [313] => Syntax\SteamApi\Containers\Game Object
+            [313] => TeemoCell\SteamWebApi\Containers\Game Object
                 (
                     [appId] => 856990
                     [name] => A Long Way Down
@@ -58,7 +58,7 @@ Illuminate\Support\Collection Object
                     [hasCommunityVisibleStats] => 1
                 )
 
-            [85] => Syntax\SteamApi\Containers\Game Object
+            [85] => TeemoCell\SteamWebApi\Containers\Game Object
                 (
                     [appId] => 261430
                     [name] => AION Free-to-Play

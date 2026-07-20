@@ -1,9 +1,9 @@
 Array
 (
-    [0] => Syntax\SteamApi\Containers\Player Object
+    [0] => TeemoCell\SteamWebApi\Containers\Player Object
         (
             [steamId] => 76561198022436617
-            [steamIds] => Syntax\SteamApi\Containers\Id Object
+            [steamIds] => TeemoCell\SteamWebApi\Containers\Id Object
                 (
                     [id32] => STEAM_1:1:31085444
                     [id64] => 76561198022436617

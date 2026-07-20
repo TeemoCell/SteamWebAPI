@@ -1,23 +1,69 @@
 # Steam Web API
 
-<!-- ![Unit Tests](https://github.com/syntaxerrors/Steam/workflows/Unit%20Tests/badge.svg) -->
-<!-- [![Maintainability](https://api.codeclimate.com/v1/badges/eb99d8de80e750fd4c27/maintainability)](https://codeclimate.com/github/syntaxerrors/Steam/maintainability) -->
-<!-- <a href="https://codeclimate.com/github/syntaxerrors/Steam/test_coverage"><img src="https://api.codeclimate.com/v1/badges/eb99d8de80e750fd4c27/test_coverage" /></a> -->
-<!-- [![Latest Stable Version](https://poser.pugx.org/syntax/steam-api/v/stable.svg)](https://packagist.org/packages/syntax/steam-api) -->
-<!-- [![Total Downloads](https://poser.pugx.org/syntax/steam-api/downloads.svg)](https://packagist.org/packages/syntax/steam-api) -->
-<!-- [![License](https://poser.pugx.org/syntax/steam-api/license.svg)](https://packagist.org/packages/syntax/steam-api) -->
+[![Unit Tests](https://github.com/TeemoCell/SteamWebAPI/actions/workflows/php.yml/badge.svg)](https://github.com/TeemoCell/SteamWebAPI/actions/workflows/php.yml)
+[![Latest Stable Version](https://poser.pugx.org/teemocell/steam-web-api/v/stable.svg)](https://packagist.org/packages/teemocell/steam-web-api)
+[![Total Downloads](https://poser.pugx.org/teemocell/steam-web-api/downloads.svg)](https://packagist.org/packages/teemocell/steam-web-api)
+[![License](https://poser.pugx.org/teemocell/steam-web-api/license.svg)](https://packagist.org/packages/teemocell/steam-web-api)
 
-**Version Support**
+A modern PHP client for the Steam Web API with optional Laravel integration.
 
-`Laravel >= 10.0`
+## Requirements
 
-`PHP >= 8.1`
+- PHP 8.1 or newer
+- Laravel 10, 11, 12 or 13 when used inside Laravel
+- A [Steam Web API key](https://steamcommunity.com/dev/apikey)
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributors](#contributors)
+## Installation
 
-This package provides an easy way to get details from the Steam Web API service. The services it can access are:
+```bash
+composer require teemocell/steam-web-api
+```
+
+## Quick start
+
+```php
+use TeemoCell\SteamWebApi\Client;
+
+$steam = new Client(apiKey: $_ENV['STEAM_API_KEY']);
+
+$player = $steam
+    ->user(76561197960287930)
+    ->GetPlayerSummaries()[0];
+
+echo $player->personaName;
+```
+
+The package uses the `TeemoCell\SteamWebApi` PHP namespace.
+
+## Laravel
+
+Add the API key to `.env`:
+
+```dotenv
+STEAM_API_KEY=your-key-here
+```
+
+The package registers `TeemoCell\SteamWebApi\Client` as a singleton through Laravel package discovery:
+
+```php
+use TeemoCell\SteamWebApi\Client;
+
+final class SteamProfileController
+{
+    public function __invoke(Client $steam, string $steamId)
+    {
+        return $steam->user($steamId)->GetPlayerSummaries();
+    }
+}
+```
+
+Publish the configuration only when it needs to be customized:
+
+```bash
+php artisan vendor:publish --provider="TeemoCell\SteamWebApi\SteamApiServiceProvider"
+```
+
+## Supported services
 
 - `ISteamNews`
 - `IPlayerService`
@@ -26,566 +72,40 @@ This package provides an easy way to get details from the Steam Web API service.
 - `IStoreService`
 - `IPublishedFileService`
 - `ISteamWebAPIUtil`
-- `IGameServersService`
+- read-only `IGameServersService`
+- publisher-key methods for `ISteamUser` and `ISteamNews`
 
-Publisher-key methods for `ISteamUser` and `ISteamNews` are exposed separately
-through `publisher()` so they are not confused with normal user-key calls.
+Legacy Store and Steam Community endpoints remain available for backwards compatibility.
 
-<hr/>
+## Documentation
 
-# Installation
+Full installation, configuration, endpoint and migration documentation is available in the [GitHub Wiki](https://github.com/TeemoCell/SteamWebAPI/wiki):
 
-Begin by installing this package with composer.
+- [Installation](https://github.com/TeemoCell/SteamWebAPI/wiki/Installation)
+- [Configuration](https://github.com/TeemoCell/SteamWebAPI/wiki/Configuration)
+- [Laravel integration](https://github.com/TeemoCell/SteamWebAPI/wiki/Laravel-Integration)
+- [Client usage](https://github.com/TeemoCell/SteamWebAPI/wiki/Client-Usage)
+- [Endpoint reference](https://github.com/TeemoCell/SteamWebAPI/wiki/Endpoints)
+- [Error handling](https://github.com/TeemoCell/SteamWebAPI/wiki/Error-Handling)
+- [Migration guide](https://github.com/TeemoCell/SteamWebAPI/wiki/Migration-Guide)
 
-    "require": {
-    	"syntax/steam-api": "3.*"
-    }
+## Testing
 
-Next, update composer from the terminal.
+Run the deterministic offline suite:
 
-    composer update syntax/steam-api
-
-> Alternately, you can run "composer require syntax/steam-api:dev-master" from the command line.
-
-Lastly, publish the config file. You can get your API key from [Steam](https://steamcommunity.com/dev/apikey).
-
-    php artisan vendor:publish --provider="Syntax\SteamApi\SteamApiServiceProvider"
-
-<hr/>
-
-# Usage
-
-Create a client explicitly and reuse it for the endpoint clients. The API key can
-come from Laravel's `steam-api.steamApiKey` configuration, `STEAM_API_KEY`, or the
-legacy `apiKey` environment variable.
-
-```php
-use Syntax\SteamApi\Client;
-
-$steam = new Client(apiKey: $apiKey);
-$apps = $steam->app()->appDetails(620);
-
-echo $apps->first()->name;
+```bash
+php vendor/bin/phpunit --filter "AppListTest|ClientConstructionTest|CurrentApiEndpointsTest|UserStatsResponseTest|LaravelClientBindingTest"
 ```
 
-Each endpoint can also be constructed directly. An optional Guzzle client can
-be injected as the second argument.
+The complete suite contains live Steam API tests and requires `STEAM_API_KEY`.
 
-```php
-use Syntax\SteamApi\Steam\App;
-use GuzzleHttp\Client as HttpClient;
+## Security
 
-$app = new App(apiKey: $apiKey, client: new HttpClient());
-$apps = $app->appDetails(620);
-```
+Never expose normal API keys, publisher keys or game-server login tokens in client-side code, logs, issues or committed files. Publisher methods must only run on a trusted server.
 
-In Laravel, `Syntax\SteamApi\Client` is registered as a singleton and can be
-constructor-injected. The existing facade remains available for backwards
-compatibility:
+## Contributing
 
-```php
-use Syntax\SteamApi\Facades\SteamApi;
-
-$apps = SteamApi::app()->appDetails(620);
-```
-
-Each service from the Steam API has its own methods you can use.
-
-- [Global](#global)
-- [News](#news)
-- [Player](#player)
-- [User](#user)
-- [User Stats](#user-stats)
-- [App](#app)
-- [Package](#package)
-- [Item](#item)
-- [Group](#group)
-- [Workshop](#workshop)
-- [Web API utilities](#web-api-utilities)
-- [Game servers](#game-servers)
-- [Publisher API](#publisher-api)
-
-## Global
-
-These are methods that are available to each service.
-
-### convertId
-
-This will convert the given steam ID to each type of steam ID (64 bit, 32 bit and steam ID3).
-
-### Arguments
-
-| Name   | Type   | Description                | Required | Default |
-| ------ | ------ | -------------------------- | -------- | ------- |
-| id     | string | The id you want to convert | Yes      |
-| format | string | The format you want back.  | No       | null    |
-
-> Possible formats are ID64, id64, 64, ID32, id32, 32, ID3, id3 and 3.
-
-Steam2 inputs may use either `STEAM_0` or `STEAM_1`; that prefix is preserved
-when converting the value. Conversions from Steam64 or Steam3 default to the
-legacy-compatible `STEAM_0` representation. Public individuall Steam3 IDs remain
-in the canonical `[U:1:accountId]` form.
-
-##### Example usage
-
-```php
-$steam->convertId($id, $format);
-```
-
-> Example Output: [convertId](./examples/global/convertId.txt)
-
-<hr/>
-
-## News
-
-The [Steam News](https://partner.steamgames.com/doc/webapi/ISteamNews) Web API is used to get articles for games.
-
-```php
-$steam->news()
-```
-
-### GetNewsForApp
-
-This method gets news articles for an app and supports all filters documented by
-the current `ISteamNews/GetNewsForApp/v2` endpoint.
-
-##### Arguments
-
-| Name      | Type | Description                                | Required | Default |
-| --------- | ---- | ------------------------------------------ | -------- | ------- |
-| appId     | int  | The id for the app you want news on        | Yes      |
-| count     | int  | The number of news items to return         | No       | 5       |
-| maxlength | int  | The maximum number of characters to return | No       | null    |
-| endDate   | int  | Return posts earlier than this Unix timestamp | No     | null    |
-| feeds     | string or array | Feed names to include            | No       | null    |
-
-##### Example usage
-
-```php
-<?php
-	$news = $steam->news()->GetNewsForApp($appId, 5, 500)->newsitems;
-?>
-```
-
-> Example Output: [GetNewsForApp](./examples/news/GetNewsForApp.txt)
-
-<hr/>
-
-## Player
-
-The [Player Service](https://partner.steamgames.com/doc/webapi/IPlayerService) is used to get details on players.
-
-When instantiating the player class, you are required to pass a steamId or Steam community ID.
-
-```php
-$steam->player($steamId)
-```
-
-#### GetSteamLevel
-
-This method will return the level of the Steam user given. It simply returns the integer of their current level.
-
-> Example Output: [GetSteamLevel](./examples/player/GetSteamLevel.txt)
-
-#### GetPlayerLevelDetails
-
-This will return a Syntax\Containers\Player_Level object with full details for the players level.
-
-> Example Output: [GetPlayerLevelDetails](./examples/player/GetPlayerLevelDetails.txt)
-
-#### GetBadges
-
-This call will give you a list of the badges that the player currently has. There is currently no schema for badges, so all you will get is the ID and details.
-
-> Example Output: [GetBadges](./examples/player/GetBadges.txt)
-
-#### GetOwnedGames
-
-GetOwnedGames returns a list of games a player owns along with some playtime information, if the profile is publicly visible. Private, friends-only, and other privacy settings are not supported unless you are asking for your own personal details (i.e. the WebAPI key you are using is linked to the steamID you are requesting).
-
-##### Arguments
-
-| Name                   | Type    | Description                                                                   | Required | Default |
-| ---------------------- | ------- | ----------------------------------------------------------------------------- | -------- | ------- |
-| includeAppInfo         | boolean | Whether or not to include game details                                        | No       | true    |
-| includePlayedFreeGames | boolean | Whether or not to include free games                                          | No       | false   |
-| appIdsFilter           | array   | An array of appIds. These will be the only ones returned if the user has them | No       | array() |
-
-> Example Output: [GetOwnedGames](./examples/player/GetOwnedGames.txt)
-
-#### GetRecentlyPlayedGames
-
-GetRecentlyPlayedGames returns a list of games a player has played in the last two weeks, if the profile is publicly visible. Private, friends-only, and other privacy settings are not supported unless you are asking for your own personal details (i.e. the WebAPI key you are using is linked to the steamID you are requesting).
-
-##### Arguments
-
-| Name  | Type | Description                   | Required | Default |
-| ----- | ---- | ----------------------------- | -------- | ------- |
-| count | int  | The number of games to return | No       | null    |
-
-> Example Output: [GetRecentlyPlayedGames](./examples/player/GetRecentlyPlayedGames.txt)
-
-#### GetSingleGamePlaytime
-
-Returns the playtime for one app. Steam only returns this information when the
-Web API key is associated with the requested app.
-
-##### Arguments
-
-| Name  | Type | Description                              | Required | Default |
-| ----- | ---- | ---------------------------------------- | -------- | ------- |
-| appId | int  | The app whose playtime should be queried | Yes      |
-
-`IsPlayingSharedGame` remains available for backwards compatibility, but Steam
-no longer documents that endpoint. Publisher integrations should use
-`publisher()->CheckAppOwnership()` instead.
-
-<hr/>
-
-## User
-
-The [User](https://partner.steamgames.com/doc/webapi/ISteamUser) Web API is used to get details about the user specifically.
-
-When instantiating the user class, you are required to pass at least one steamId or steam community ID.
-
-```php
-$steam->user($steamId)
-```
-
-#### ResolveVanityURL
-
-This will return details on the user from their display name.
-
-##### Arguments
-
-| Name        | Type   | Description                                                                                                                | Required | Default |
-| ----------- | ------ | -------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| displayName | string | The display name to get the steam ID for. In `https://steamcommunity.com/id/gabelogannewell` it would be `gabelogannewell`. | Yes      | NULL    |
-| urlType | int | Vanity URL type: individual profile (1), group (2), or official game group (3). | No | 1 |
-
-```php
-	$player = $steam->user($steamId)->ResolveVanityURL('gabelogannewell');
-```
-
-> Example Output: [ResolveVanityURL](./examples/user/ResolveVanityURL.txt)
-
-#### GetPlayerSummaries
-
-This will return details on one or more users.
-
-##### Arguments
-
-| Name    | Type  | Description                                              | Required | Default                   |
-| ------- | ----- | -------------------------------------------------------- | -------- | ------------------------- |
-| steamId | int[] | An array of (or singular) steam ID(s) to get details for | No       | Steam ID passed to user() |
-
-```php
-	// One user
-	$steamId = 76561197960287930;
-	$player = $steam->user($steamId)->GetPlayerSummaries()[0];
-
-	// Several users
-	$steamIds = [76561197960287930, 76561197968575517]
-	$players = $steam->user($steamIds)->GetPlayerSummaries();
-```
-
-> Example Output: [GetPlayerSummaries](./examples/user/GetPlayerSummaries.txt)
-
-#### GetFriendList
-
-Returns the friend list of any Steam user, provided his Steam Community profile visibility is set to "Public".
-
-##### Arguments
-
-| Name         | Type                   | Description                                             | Required | Default |
-| ------------ | ---------------------- | ------------------------------------------------------- | -------- | ------- |
-| relationship | string (all or friend) | The type of friends to get                              | No       | all     |
-| summaries    | bool (true or false)   | To return the friend player summaries, or only steamIds | No       | true    |
-
-Once the list of friends is gathered, if `summaries` is not set to `false`; it is passed through [GetPlayerSummaries](#GetPlayerSummaries). This allows you to get back a collection of Player objects.
-
-> Example Output: [GetFriendList](./examples/user/GetFriendList.txt)
-
-#### GetPlayerBans
-
-Returns the possible bans placed on the provided steam ID(s).
-
-##### Arguments
-
-| Name    | Type  | Description                                              | Required | Default                   |
-| ------- | ----- | -------------------------------------------------------- | -------- | ------------------------- |
-| steamId | int[] | An array of (or singular) steam id(s) to get details for | No       | Steam id passed to user() |
-
-> Example Output: [GetPlayerBans](./examples/user/GetPlayerBans.txt)
-
-<hr/>
-
-## User Stats
-
-The [User Stats](https://partner.steamgames.com/doc/webapi/ISteamUserStats) Web API is used to get details about a user's gaming.
-
-A SteamID or Steam community ID is required for user-specific calls. App-wide
-methods such as `GetNumberOfCurrentPlayers` can use `userStats()` without one.
-
-```php
-$steam->userStats($steamId)
-```
-
-#### GetPlayerAchievements
-
-Returns a list of achievements for this user by app ID.
-
-##### Arguments
-
-| Name  | Type | Description                                            | Required | Default |
-| ----- | ---- | ------------------------------------------------------ | -------- | ------- |
-| appId | int  | The id of the game you want the user's achievements in | Yes      |
-
-> Example Output: [GetPlayerAchievements](./examples/user/stats/GetPlayerAchievements.txt)
-
-#### GetGlobalAchievementPercentagesForApp
-
-This method will return a list of all achievements for the specified game and the percentage of all users that have unlocked each achievement.
-
-##### Arguments
-
-| Name  | Type | Description                                            | Required | Default |
-| ----- | ---- | ------------------------------------------------------ | -------- | ------- |
-| appId | int  | The ID of the game you want the user's achievements in | Yes      |
-
-> Example Output: [GetGlobalAchievementPercentagesForApp](./examples/user/stats/GetGlobalAchievementPercentageForApp.txt)
-
-#### GetUserStatsForGame
-
-Returns a list of achievements for this user by app ID.
-
-##### Arguments
-
-| Name  | Type    | Description                                                      | Required | Default |
-| ----- | ------- | ---------------------------------------------------------------- | -------- | ------- |
-| appId | int     | The ID of the game you want the user's achievements in           | Yes      |
-| all   | boolean | If you want all stats and not just the achievements set to true. | No       | FALSE   |
-
-> Example Output: [GetUserStatsForGame](./examples/user/stats/GetUserStatsForGame.txt) | [GetUserStatsForGame (all)](./examples/user/stats/GetUserStatsForGameAll.txt)
-
-#### GetSchemaForGame
-
-Returns a list of game details, including achievements and stats.
-
-##### Arguments
-
-| Name  | Type | Description                                  | Required | Default |
-| ----- | ---- | -------------------------------------------- | -------- | ------- |
-| appId | int  | The ID of the game you want the details for. | Yes      |
-
-> Example Output: [GetSchemaForGame](./examples/user/stats/GetSchemaForGame.txt)
-
-#### GetNumberOfCurrentPlayers
-
-Returns the number of players currently connected to Steam for an app. No
-SteamID is required:
-
-```php
-$playerCount = $steam->userStats()->GetNumberOfCurrentPlayers(620);
-```
-
-<hr/>
-
-## App
-
-This area will get details for games.
-
-```php
-$steam->app()
-```
-
-#### appDetails
-
-This gets all the details for a game. This is most of the information from the store page of a game.
-
-##### Arguments
-
-| Name   | Type   | Description                                                                                                                                                                    | Required | Default |
-| ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- | ------- |
-| appIds | int[]  | The ids of the games you want details for                                                                                                                                      | Yes      |
-| cc     | string | The cc is the country code, you can get appropriate currency values according to [ISO 3166-1](https://wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements) | No       |
-| l      | string | The l is the language parameter, you can get the appropriate language according to [ISO 639-1](https://wikipedia.org/wiki/List_of_ISO_639-1_codes)                             | No       |
-
-> Example Output: [appDetails](./examples/app/appDetails.txt)
-
-#### GetAppList
-
-This method returns all matching app objects directly from Steam. It uses the
-paginated `IStoreService` endpoint and follows every result page automatically.
-Optional filters supported by Steam, such as `include_dlc`, `if_modified_since`,
-or `max_results`, can be passed as an array.
-
-```php
-$apps = $steam->app()->GetAppList(['include_dlc' => true]);
-```
-
-> Example Output: [GetAppList](./examples/app/GetAppList.txt)
-
-<hr/>
-
-## Package
-
-This method will get details for packages.
-
-```php
-$steam->package()
-```
-
-#### packageDetails
-
-This gets all the details for a package. This is most of the information from the store page of a package.
-
-##### Arguments
-
-| Name    | Type   | Description                                                                                                                                            | Required | Default |
-| ------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- | ------- |
-| packIds | int[]  | The ids of the packages you want details for                                                                                                           | Yes      |
-| cc      | string | The cc is the country code, you can get appropriate currency values according to [ISO 3166-1](https://wikipedia.org/wiki/ISO_3166-1)                   | No       |
-| l       | string | The l is the language parameter, you can get the appropriate language according to [ISO 639-1](https://wikipedia.org/wiki/ISO_639-1) (If there is one) | No       |
-
-> Example Output: [packageDetails](./examples/package/packageDetails.txt)
-
-<hr/>
-
-## Item
-
-This method will get user inventory for item.
-
-```php
-$steam->item()
-```
-
-#### GetPlayerItems
-
-This gets all the item for a user inventory.
-
-##### Arguments
-
-| Name    | Type | Description                                | Required | Default |
-| ------- | ---- | ------------------------------------------ | -------- | ------- |
-| appId   | int  | The appid of the game you want for         | Yes      |
-| steamid | int  | The steamid of the Steam user you want for | Yes      |
-
-⚠️ **Now known to supports**:`440`, `570`, `620`, `730`, `205790`, `221540`, `238460`
-
-> Example Output: [GetPlayerItems](./examples/item/GetPlayerItems.txt)
-
-<hr/>
-
-### Group
-
-This service is used to get details on a Steam group.
-
-```php
-$steam->group()
-```
-
-#### GetGroupSummary
-
-This method will get the details for a group.
-
-##### Arguments
-
-| Name  | Type          | Description                      | Required | Default |
-| ----- | ------------- | -------------------------------- | -------- | ------- |
-| group | string or int | The ID or the name of the group. | Yes      |
-
-##### Example usage
-
-```php
-<?php
-	$news = $steam->group()->GetGroupSummary('Valve');
-?>
-```
-
-> Example Output: [GetGroupSummary](./examples/group/GetGroupSummary.txt)
-
-<hr/>
-
-## Workshop
-
-`IPublishedFileService/QueryFiles/v1` searches Steam Workshop items. Official
-filters are passed as an associative array and cursor pagination starts at `*`.
-
-```php
-$files = $steam->workshop()->QueryFiles([
-    'query_type' => 1,
-    'appid' => 620,
-    'return_tags' => true,
-]);
-```
-
-## Web API utilities
-
-```php
-$serverInfo = $steam->webApi()->GetServerInfo();
-$supportedApis = $steam->webApi()->GetSupportedAPIList();
-```
-
-## Game servers
-
-Read-only `IGameServersService` calls are grouped under `gameServers()`:
-
-```php
-$accounts = $steam->gameServers()->GetAccountList();
-$token = $steam->gameServers()->QueryLoginToken($loginToken);
-```
-
-The client also provides `GetAccountPublicInfo`, `GetServerSteamIDsByIP`, and
-`GetServerIPsBySteamID`. Account creation, token resets, and deletion are not
-exposed because they mutate server credentials.
-
-## Publisher API
-
-These methods require a Steamworks publisher key and must only run on a trusted
-server. Never expose a publisher key to a browser or game client.
-
-```php
-$publisher = (new Client(apiKey: $publisherKey))->publisher();
-$ownership = $publisher->CheckAppOwnership($steamId, $appId);
-$news = $publisher->GetNewsForAppAuthed($appId);
-```
-
-## Legacy endpoints
-
-`appDetails`, `packageDetails`, `GetPlayerItems`, group XML, and
-`GetPlayerAchievementsFromCommunity` use legacy Store or Community endpoints.
-They remain available for compatibility but are not equivalent to documented
-Steamworks Web API interfaces.
-
-<hr/>
-
-## Testing the Steam Package
-
-A Steam API key must be provided or most tests will fail.
-
-**Run Tests**
-
-```
-# Build container
-docker-compose build
-
-# Install dependencies
-docker-compose run --rm php composer install
-
-# Run tests (assumes STEAM_API_KEY is set in .env file)
-docker-compose run --rm php composer test
-
-# Or with the API key inline
-docker-compose run --rm -e STEAM_API_KEY=YOUR_STEAM_API_KEY php composer test
-
-# With coverage
-docker-compose run --rm php composer coverage
-
-# Play around
-docker-compose run --rm php bash
-```
+Bug reports and pull requests are welcome through the [GitHub issue tracker](https://github.com/TeemoCell/SteamWebAPI/issues).
 
 ## Contributors
 
@@ -599,3 +119,7 @@ docker-compose run --rm php bash
 - [jastend](https://github.com/jastend)
 - [Teakowa](https://github.com/Teakowa)
 - [Ben Sherred](https://github.com/bensherred)
+
+## License
+
+This package is open-source software licensed under the [MIT License](LICENSE).

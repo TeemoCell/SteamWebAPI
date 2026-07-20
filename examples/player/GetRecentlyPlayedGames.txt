@@ -2,7 +2,7 @@ Illuminate\Support\Collection Object
 (
     [items:protected] => Array
         (
-            [3] => Syntax\SteamApi\Containers\Game Object
+            [3] => TeemoCell\SteamWebApi\Containers\Game Object
                 (
                     [appId] => 284160
                     [name] => BeamNG.drive
@@ -16,7 +16,7 @@ Illuminate\Support\Collection Object
                     [hasCommunityVisibleStats] => 0
                 )
 
-            [2] => Syntax\SteamApi\Containers\Game Object
+            [2] => TeemoCell\SteamWebApi\Containers\Game Object
                 (
                     [appId] => 1621070
                     [name] => DeadPoly
@@ -30,7 +30,7 @@ Illuminate\Support\Collection Object
                     [hasCommunityVisibleStats] => 0
                 )
 
-            [1] => Syntax\SteamApi\Containers\Game Object
+            [1] => TeemoCell\SteamWebApi\Containers\Game Object
                 (
                     [appId] => 2259310
                     [name] => ORDER 13
@@ -44,7 +44,7 @@ Illuminate\Support\Collection Object
                     [hasCommunityVisibleStats] => 0
                 )
 
-            [0] => Syntax\SteamApi\Containers\Game Object
+            [0] => TeemoCell\SteamWebApi\Containers\Game Object
                 (
                     [appId] => 3311740
                     [name] => The Cabin Factory

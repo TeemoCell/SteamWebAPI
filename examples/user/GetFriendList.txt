@@ -1,6 +1,6 @@
 Array
 (
-    [0] => Syntax\SteamApi\Containers\Player Object
+    [0] => TeemoCell\SteamWebApi\Containers\Player Object
         (
             [steamId] => 76561198022436617
             [steamIds] => stdClass Object
@@ -22,7 +22,7 @@ Array
             [timecreated] => March 15th, 2010 01:31pm
             [personaStateFlags] => 0
         )
-    [1] => Syntax\SteamApi\Containers\Player Object
+    [1] => TeemoCell\SteamWebApi\Containers\Player Object
         (
             [steamId] => 76561198028432364
             [steamIds] => stdClass Object

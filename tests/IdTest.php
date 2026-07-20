@@ -1,7 +1,7 @@
 <?php
 
-use Syntax\SteamApi\Exceptions\UnrecognizedId;
-use Syntax\SteamApi\SteamIdConverter;
+use TeemoCell\SteamWebApi\Exceptions\UnrecognizedId;
+use TeemoCell\SteamWebApi\SteamIdConverter;
 
 require_once 'BaseTester.php';
 

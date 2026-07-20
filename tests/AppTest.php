@@ -31,7 +31,7 @@ class AppTest extends BaseTester {
      */
     private function checkClasses($detail): void
     {
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\App::class, $detail);
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\App::class, $detail);
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $detail->developers);
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $detail->publishers);
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $detail->categories);

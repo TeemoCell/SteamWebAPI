@@ -16,7 +16,7 @@ class PlayerTest extends BaseTester {
     {
         $details = $this->steamClient->player($this->id64)->GetPlayerLevelDetails();
 
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Player\Level::class, $details);
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Player\Level::class, $details);
 
         $attributes = [
             'playerXp', 'playerLevel', 'xpToLevelUp', 'xpForCurrentLevel', 'currentLevelFloor',
@@ -53,7 +53,7 @@ class PlayerTest extends BaseTester {
         $games = $this->steamClient->player($this->id64)->GetOwnedGames();
 
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $games);
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Game::class, $games->first());
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Game::class, $games->first());
 
         $attributes = [
             'appId', 'name', 'playtimeTwoWeeks', 'playtimeTwoWeeksReadable', 'playtimeForever', 'playtimeForeverReadable',
@@ -67,7 +67,7 @@ class PlayerTest extends BaseTester {
         $games = $this->steamClient->player($this->id64)->GetOwnedGames(false);
 
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $games);
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Game::class, $games->first());
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Game::class, $games->first());
 
         $attributes = [
             'appId', 'name', 'playtimeTwoWeeks', 'playtimeTwoWeeksReadable', 'playtimeForever', 'playtimeForeverReadable',
@@ -85,7 +85,7 @@ class PlayerTest extends BaseTester {
         $games = $this->steamClient->player($this->id64)->GetOwnedGames(true, false, 400);
 
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $games);
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Game::class, $games->first());
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Game::class, $games->first());
         $this->assertEquals(1, $games->count());
 
         $attributes = [
@@ -100,7 +100,7 @@ class PlayerTest extends BaseTester {
         $games = $this->steamClient->player($this->id64)->GetRecentlyPlayedGames();
 
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $games);
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Game::class, $games->first());
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Game::class, $games->first());
 
         $attributes = [
             'appId', 'name', 'playtimeTwoWeeks', 'playtimeTwoWeeksReadable', 'playtimeForever', 'playtimeForeverReadable',
@@ -114,7 +114,7 @@ class PlayerTest extends BaseTester {
         $games = $this->steamClient->player($this->id64)->GetRecentlyPlayedGames(1);
 
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $games);
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Game::class, $games->first());
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Game::class, $games->first());
         $this->assertEquals(1, $games->count());
 
         $attributes = [

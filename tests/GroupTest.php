@@ -26,9 +26,9 @@ class GroupTest extends BaseTester {
      */
     protected function checkClasses($group): void
     {
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Group::class, $group);
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Group\Details::class, $group->groupDetails);
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Group\MemberDetails::class, $group->memberDetails);
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Group::class, $group);
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Group\Details::class, $group->groupDetails);
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Group\MemberDetails::class, $group->memberDetails);
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $group->members);
     }
 }

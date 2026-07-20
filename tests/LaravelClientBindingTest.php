@@ -1,9 +1,9 @@
 <?php
 
 use Orchestra\Testbench\TestCase;
-use Syntax\SteamApi\Client;
-use Syntax\SteamApi\Facades\SteamApi;
-use Syntax\SteamApi\SteamApiServiceProvider;
+use TeemoCell\SteamWebApi\Client;
+use TeemoCell\SteamWebApi\Facades\SteamApi;
+use TeemoCell\SteamWebApi\SteamApiServiceProvider;
 
 class LaravelClientBindingTest extends TestCase
 {

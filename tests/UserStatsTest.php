@@ -16,7 +16,7 @@ class UserStatsTest extends BaseTester {
     {
         $achievements = $this->steamClient->userStats(76561198022436617)->GetPlayerAchievements(252950);
 
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Achievement::class, $achievements[0]);
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Achievement::class, $achievements[0]);
         $this->checkAchievementProperties($achievements[0]);
     }
 

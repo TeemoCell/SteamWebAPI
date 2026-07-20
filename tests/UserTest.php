@@ -1,8 +1,8 @@
 <?php
 
 use GuzzleHttp\Exception\GuzzleException;
-use Syntax\SteamApi\Exceptions\ApiCallFailedException;
-use Syntax\SteamApi\Exceptions\UnrecognizedId;
+use TeemoCell\SteamWebApi\Exceptions\ApiCallFailedException;
+use TeemoCell\SteamWebApi\Exceptions\UnrecognizedId;
 
 require_once 'BaseTester.php';
 
@@ -139,7 +139,7 @@ class UserTest extends BaseTester {
 
     private function checkPlayerClasses($friendsList): void
     {
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Player::class, $friendsList[0]);
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Id::class, $friendsList[0]->steamIds);
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Player::class, $friendsList[0]);
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Id::class, $friendsList[0]->steamIds);
     }
 }

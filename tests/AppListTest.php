@@ -7,7 +7,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use Syntax\SteamApi\Steam\App;
+use TeemoCell\SteamWebApi\Steam\App;
 
 class AppListTest extends TestCase
 {

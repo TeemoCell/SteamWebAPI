@@ -2,7 +2,7 @@ Illuminate\Support\Collection Object
 (
     [items:protected] => Array
         (
-            [0] => Syntax\SteamApi\Containers\App Object
+            [0] => TeemoCell\SteamWebApi\Containers\App Object
                 (
                     [id] => 620
                     [type] => game

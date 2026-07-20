@@ -3,7 +3,7 @@
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
-use Syntax\SteamApi\Steam\User\Stats;
+use TeemoCell\SteamWebApi\Steam\User\Stats;
 
 #[AllowMockObjectsWithoutExpectations]
 class UserStatsResponseTest extends TestCase

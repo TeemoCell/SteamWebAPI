@@ -7,15 +7,15 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use Syntax\SteamApi\Containers\Achievement;
-use Syntax\SteamApi\Steam\News;
-use Syntax\SteamApi\Steam\GameServers;
-use Syntax\SteamApi\Steam\Player;
-use Syntax\SteamApi\Steam\Publisher;
-use Syntax\SteamApi\Steam\User;
-use Syntax\SteamApi\Steam\User\Stats;
-use Syntax\SteamApi\Steam\WebApi;
-use Syntax\SteamApi\Steam\Workshop;
+use TeemoCell\SteamWebApi\Containers\Achievement;
+use TeemoCell\SteamWebApi\Steam\News;
+use TeemoCell\SteamWebApi\Steam\GameServers;
+use TeemoCell\SteamWebApi\Steam\Player;
+use TeemoCell\SteamWebApi\Steam\Publisher;
+use TeemoCell\SteamWebApi\Steam\User;
+use TeemoCell\SteamWebApi\Steam\User\Stats;
+use TeemoCell\SteamWebApi\Steam\WebApi;
+use TeemoCell\SteamWebApi\Steam\Workshop;
 
 class CurrentApiEndpointsTest extends TestCase
 {

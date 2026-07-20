@@ -1,7 +1,7 @@
 <?php
 
 use Orchestra\Testbench\TestCase;
-use Syntax\SteamApi\Client;
+use TeemoCell\SteamWebApi\Client;
 use Dotenv\Dotenv;
 
 class BaseTester extends TestCase {
@@ -234,7 +234,7 @@ class BaseTester extends TestCase {
 
     protected function expectApiCallFailedException(string $message): void
     {
-        $this->expectException(\Syntax\SteamApi\Exceptions\ApiCallFailedException::class);
+        $this->expectException(\TeemoCell\SteamWebApi\Exceptions\ApiCallFailedException::class);
         $this->expectExceptionMessage($message);
     }
 

@@ -1,11 +1,11 @@
-Syntax\SteamApi\Inventory Object
+TeemoCell\SteamWebApi\Inventory Object
 (
     [numberOfBackpackSlots] => 300
     [items] => Illuminate\Support\Collection Object
         (
             [items:protected] => Array
                 (
-                    [0] => Syntax\SteamApi\Containers\Item Object
+                    [0] => TeemoCell\SteamWebApi\Containers\Item Object
                         (
                             [id] => 12336429
                             [originalId] => 12336429
@@ -32,7 +32,7 @@ Syntax\SteamApi\Inventory Object
 
                         )
 
-                    [1] => Syntax\SteamApi\Containers\Item Object
+                    [1] => TeemoCell\SteamWebApi\Containers\Item Object
                         (
                             [id] => 14577130
                             [originalId] => 14577130
@@ -59,7 +59,7 @@ Syntax\SteamApi\Inventory Object
 
                         )
 
-                    [2] => Syntax\SteamApi\Containers\Item Object
+                    [2] => TeemoCell\SteamWebApi\Containers\Item Object
                         (
                             [id] => 20050058
                             [originalId] => 20050058

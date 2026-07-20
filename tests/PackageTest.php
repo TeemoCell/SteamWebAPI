@@ -22,6 +22,6 @@ class PackageTest extends BaseTester
      */
     private function checkPackageClasses($detail): void
     {
-        $this->assertInstanceOf(\Syntax\SteamApi\Containers\Package::class, $detail);
+        $this->assertInstanceOf(\TeemoCell\SteamWebApi\Containers\Package::class, $detail);
     }
 }
